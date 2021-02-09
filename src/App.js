@@ -1,35 +1,23 @@
 import logo from './logo.svg';
 import './App.css';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
-class App extends React.Component{
+function App(props){
+  const [switches, setSwitches] = useState("inconnu");
 
-  constructor(props){
-    super(props);
-    this.state = {
-      switches: "inconnu"
-    };
 
-  }
 
-  updateSwitches() {
+  const updateSwitches = () => {
     const http = new XMLHttpRequest();
     const url = 'http://192.168.1.10/cmd/sws';
 
     http.open("GET", url);
     http.send();
-    http.onload = () => this.setState({switches: http.responseText});
-
+    http.onload = () => setSwitches(http.responseText);
   }
-
-  componentDidMount() {
-    this.interval = setInterval( () => this.updateSwitches(), 10);
-  }
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  render(){
+  
+  useEffect(()=> setInterval( () => updateSwitches(), 10), []);
+  
     return (
         <div className="App">
           <header className="App-header">
@@ -37,13 +25,11 @@ class App extends React.Component{
             <p>Hello!</p>
 
             <p>L'état des interrupteurs est : </p>
-            <b><p id="switches">{this.state.switches}</p></b>
+            <b><p id="switches">{switches}</p></b>
 
           </header>
         </div>
     );
   }
-}
-
 
 export default App;
