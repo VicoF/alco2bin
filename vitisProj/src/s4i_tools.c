@@ -82,6 +82,16 @@ u16 AD1_GetSampleRaw1()
 	return rawData;
 }
 
+void setEthyloEnabled(int enable)
+{
+	if(enable){
+		xil_printf("Ethylo test started... collecting data\n");
+		}else{
+			xil_printf("Ethylo test stoped\n");
+		}
+	MY_ADCIP_mWriteReg(MY_AD1_IP_BASEADDRESS, 0x8, enable);
+
+}
 
 float AD1_GetSampleVoltage()
 {

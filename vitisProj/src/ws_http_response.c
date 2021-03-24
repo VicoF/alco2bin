@@ -34,12 +34,11 @@
 #include "webserver.h"
 #include "xil_printf.h"
 
-
 // Ajout pour S4i GIF402
 #include "s4i_tools.h"
 
 char *notfound_header =
-	"<html> \
+		"<html> \
 	<head> \
 		<title>404</title> \
 		<style type=\"text/css\"> \
@@ -50,8 +49,7 @@ char *notfound_header =
 	<h1>404 Page Not Found</h1> \
 	<div id=\"request\">";
 
-char *notfound_footer =
-	"</div> \
+char *notfound_footer = "</div> \
 	</body> \
 	</html>";
 
@@ -59,8 +57,7 @@ char *notfound_footer =
  * this inserts the original request string in betwween the notfound_header &
  * footer strings
  */
-int do_404(int sd, char *req, int rlen)
-{
+int do_404(int sd, char *req, int rlen) {
 	int len, hlen;
 	int BUFSIZE = 1024;
 	char buf[BUFSIZE];
@@ -95,12 +92,10 @@ int do_404(int sd, char *req, int rlen)
 		return -1;
 	}
 
-
 	return 0;
 }
 
-int do_http_post(int sd, char *req, int rlen)
-{
+int do_http_post(int sd, char *req, int rlen) {
 	int BUFSIZE = 1024;
 	int len, n;
 	char buf[BUFSIZE];
@@ -125,6 +120,46 @@ int do_http_post(int sd, char *req, int rlen)
 		buf[len++] = '0'; /* single byte payload - '0' - to ack */
 		buf[len++] = 0;
 
+	} else if (is_cmd_start(req)) {
+
+		/* HTTP data starts after "\r\n\r\n" sequence */
+		char *data = strstr(req, "\r\n\r\n") + 4;
+		//find the test key
+		char *test = strstr(data, "\"test\"");
+		if (test== NULL) {
+			xil_printf("http POST start_test: missing test type\r\n");
+			return -1;
+		}
+		//isolate the value between the two quotes ""
+		char *starttype = strstr(test+6, "\"")+1;
+		char *endtype = strstr(starttype, "\"")-1;
+		char type[10];
+		int i =0;
+		while(starttype<=endtype){
+			type[i] = *starttype;
+			starttype++;
+			i++;
+		}
+		type[i] = '\0';
+		//check if it correspond to ethylo
+		if(strcmp(type, "ethylo")==0){
+			setEthyloEnabled(1);
+			//todo: check if test is already pending and adapt response
+			char response[] = "{ \"status\": \"success\"}";
+			len = generate_http_header(buf, "jsn", strlen(response));
+			strcpy(buf+len, response);
+			len+= strlen(response);
+
+		}else if (0){
+		//eventualy add more check here
+		}
+		//type not found, returning an error
+		else {
+			xil_printf("http POST start_test: unrecognized test type \"%s\"\r\n", type);
+			return -1;
+		}
+
+
 	} else {
 		xil_printf("http POST: unsupported command\r\n");
 		return -1;
@@ -140,8 +175,7 @@ int do_http_post(int sd, char *req, int rlen)
 }
 
 /* respond for a file GET request */
-int do_http_get(int sd, char *req, int rlen)
-{
+int do_http_get(int sd, char *req, int rlen) {
 	int BUFSIZE = 1400;
 	char filename[MAX_FILENAME];
 	char buf[BUFSIZE];              // Buffer de sortie (en-tête + contenu)
@@ -150,149 +184,157 @@ int do_http_get(int sd, char *req, int rlen)
 	FIL fil;
 	FRESULT Res;
 
-    // NOTE: La méthode retourne 0 si tout se passe bien, -1 si une erreur est
-    // survenue. La réponse à transmettre au client doit être entrée dans la
-    // variable buf, qui est un tableau de taille fixe. La taille du contenu
-    // doit être indiquée dans l'en-tête (voir les méthodes
-    // TODO: Ici, il faudrait détecter si une requête correspond
-    // à un élément connu, par exemple un de vos capteurs, et y répondre
-    // adéquatement.
-    // La structure a été mise en place, mais vous devez compléter le code de
-    // réponse ainsi que la méthode s4i_is_cmd_sws(req), qui retourne toujours
-    // zéro pour l'instant.
-    if (s4i_is_cmd_sws(req)) {
-        xil_printf("!!! HTTP GET: cmd/sws\r\n");
-        
-        // Obtient l'état des interrupteurs.
-        unsigned int switches = s4i_get_sws_state();
-        xil_printf("!!! HTTP GET: switch state: %x\r\n", switches);
+	// NOTE: La méthode retourne 0 si tout se passe bien, -1 si une erreur est
+	// survenue. La réponse à transmettre au client doit être entrée dans la
+	// variable buf, qui est un tableau de taille fixe. La taille du contenu
+	// doit être indiquée dans l'en-tête (voir les méthodes
+	// TODO: Ici, il faudrait détecter si une requête correspond
+	// à un élément connu, par exemple un de vos capteurs, et y répondre
+	// adéquatement.
+	// La structure a été mise en place, mais vous devez compléter le code de
+	// réponse ainsi que la méthode s4i_is_cmd_sws(req), qui retourne toujours
+	// zéro pour l'instant.
+	if (s4i_is_cmd_sws(req)) {
+		xil_printf("!!! HTTP GET: cmd/sws\r\n");
 
-        // La variable sw_buf contient pour l'instant une structure JSON vide.
-        // Elle devrait contenir une structure comme :
-        //   {switches: [1,0,0,1]}
-        char* sw_buf[50];
+		// Obtient l'état des interrupteurs.
+		unsigned int switches = s4i_get_sws_state();
+		xil_printf("!!! HTTP GET: switch state: %x\r\n", switches);
 
-        // TODO: Remplir sw_buf avec l'état des interrupteurs.
-        // Un indice : Utilisez sprintf et strcat.
-        unsigned int bit_array[4] = {0,0,0,0};
-        hex_to_bin(switches, bit_array);
-        sprintf(sw_buf, "{\"switches\": [%u, %u, %u, %u]}", bit_array[0], bit_array[1], bit_array[2] , bit_array[3] );
-        // Génération de l'entête, qui a besoin de connaître la taille du buffer
-        // généré (sw_buf ici).
-        unsigned int sw_len = strlen(sw_buf);
+		// La variable sw_buf contient pour l'instant une structure JSON vide.
+		// Elle devrait contenir une structure comme :
+		//   {switches: [1,0,0,1]}
+		char* sw_buf[50];
 
-        unsigned int len = generate_http_header(buf, "js", sw_len);
-        strcat(buf, sw_buf); // Concaténation de l'entête et de la réponse.
-        len += sw_len;
+		// TODO: Remplir sw_buf avec l'état des interrupteurs.
+		// Un indice : Utilisez sprintf et strcat.
+		unsigned int bit_array[4] = { 0, 0, 0, 0 };
+		hex_to_bin(switches, bit_array);
+		sprintf(sw_buf, "{\"switches\": [%u, %u, %u, %u]}", bit_array[0],
+				bit_array[1], bit_array[2], bit_array[3]);
+		// Génération de l'entête, qui a besoin de connaître la taille du buffer
+		// généré (sw_buf ici).
+		unsigned int sw_len = strlen(sw_buf);
 
-        // Écriture sur le socket.
-        if (lwip_write(sd, buf, len) != len) {
-            xil_printf("Error writing GET response to socket\r\n");
-            xil_printf("http header = %s\r\n", buf);
-            return -1;
-        }
+		unsigned int len = generate_http_header(buf, "js", sw_len);
+		strcat(buf, sw_buf); // Concaténation de l'entête et de la réponse.
+		len += sw_len;
 
-    } else if (s4i_is_cmd_ethylo(req)){
-    	 xil_printf("!!! HTTP GET: cmd/ethylo\r\n");
+		// Écriture sur le socket.
+		if (lwip_write(sd, buf, len) != len) {
+			xil_printf("Error writing GET response to socket\r\n");
+			xil_printf("http header = %s\r\n", buf);
+			return -1;
+		}
 
-    	 //obtenir les données simulées
-    	 float volt_flow=AD1_GetSampleVoltage1();
-    	 float flow = get_flow();
-    	 //float alcool = (float)(rand()%100) / 100;
-    	 float volt_alcool = AD1_GetSampleVoltage();
-    	 float alcool = voltage_to_alcool( volt_alcool);
-    	 char* ethy_buf[50];
-    	 sprintf(ethy_buf, "{\n\"flow\": %.2f,\n\"alcool\": %.2f\n}", flow, alcool);
-    	 unsigned int ethy_len = strlen(ethy_buf);
-    	 unsigned int len = generate_http_header(buf, "js", ethy_len);
-    	 strcat(buf, ethy_buf);
-    	 len += ethy_len;
+	} else if (s4i_is_cmd_ethylo(req)) {
+		xil_printf("!!! HTTP GET: cmd/ethylo\r\n");
 
-    	 // Écriture sur le socket.
-		 if (lwip_write(sd, buf, len) != len) {
-			 xil_printf("Error writing GET response to socket\r\n");
-			 xil_printf("http header = %s\r\n", buf);
-			 return -1;
-		 }
-		 //�criture pmod led
-		 PmodOLED oledDevice;
-		 // Initialiser le Pmod Oled
-		 	OLED_Begin(&oledDevice, XPAR_PMODOLED_0_AXI_LITE_GPIO_BASEADDR, XPAR_PMODOLED_0_AXI_LITE_SPI_BASEADDR, 0, 0);
-		 	// D�sactiver la mise � jour automatique de l'�cran de l'OLED
-		 	OLED_SetCharUpdate(&oledDevice, 0);
-		 	// Pr�parer l'�cran pour afficher l'�tat des boutons et des switch
-		 	//OLED_ClearBuffer(&oledDevice);
-		 	OLED_SetCursor(&oledDevice, 0, 3);
-		 	OLED_PutString(&oledDevice, "Taux = ");
-		 	OLED_Update(&oledDevice);
-		 char voltageChar[5];
-		 sprintf(voltageChar,"%.2f",alcool);
-		 		OLED_SetCursor(&oledDevice, 8, 3);
-		 		OLED_PutString(&oledDevice, voltageChar);
-		 		OLED_Update(&oledDevice);
-		 		OLED_SetCursor(&oledDevice, 13, 3);
-		 		OLED_PutString(&oledDevice, "g/L");
-		 		OLED_Update(&oledDevice);
-    }
+		//obtenir les données simulées
+		float volt_flow = AD1_GetSampleVoltage1();
+		float flow = get_flow();
+		//float alcool = (float)(rand()%100) / 100;
+		float volt_alcool = AD1_GetSampleVoltage();
+		float alcool = voltage_to_alcool(volt_alcool);
+		char* ethy_buf[50];
+		sprintf(ethy_buf, "{\n\"flow\": %.2f,\n\"alcool\": %.2f\n}", flow,
+				alcool);
+		unsigned int ethy_len = strlen(ethy_buf);
+		unsigned int len = generate_http_header(buf, "js", ethy_len);
+		strcat(buf, ethy_buf);
+		len += ethy_len;
 
-    else {
-        // Si la requête n'est pas un point d'accès ("route") connu, on tente de
-        // charger un fichier depuis la carte microSD.
-        // Sinon, erreur 404.
+		// Écriture sur le socket.
+		if (lwip_write(sd, buf, len) != len) {
+			xil_printf("Error writing GET response to socket\r\n");
+			xil_printf("http header = %s\r\n", buf);
+			return -1;
+		}
+		//�criture pmod led
+		PmodOLED oledDevice;
+		// Initialiser le Pmod Oled
+		OLED_Begin(&oledDevice, XPAR_PMODOLED_0_AXI_LITE_GPIO_BASEADDR,
+				XPAR_PMODOLED_0_AXI_LITE_SPI_BASEADDR, 0, 0);
+		// D�sactiver la mise � jour automatique de l'�cran de l'OLED
+		OLED_SetCharUpdate(&oledDevice, 0);
+		// Pr�parer l'�cran pour afficher l'�tat des boutons et des switch
+		//OLED_ClearBuffer(&oledDevice);
+		OLED_SetCursor(&oledDevice, 0, 3);
+		OLED_PutString(&oledDevice, "Taux = ");
+		OLED_Update(&oledDevice);
+		char voltageChar[5];
+		sprintf(voltageChar, "%.2f", alcool);
+		OLED_SetCursor(&oledDevice, 8, 3);
+		OLED_PutString(&oledDevice, voltageChar);
+		OLED_Update(&oledDevice);
+		OLED_SetCursor(&oledDevice, 13, 3);
+		OLED_PutString(&oledDevice, "g/L");
+		OLED_Update(&oledDevice);
+	}
 
-        /* determine file name */
-        extract_file_name(filename, req, rlen, MAX_FILENAME);
+	else {
+		// Si la requête n'est pas un point d'accès ("route") connu, on tente de
+		// charger un fichier depuis la carte microSD.
+		// Sinon, erreur 404.
 
-        /* respond with 404 if not present */
-        Res = f_open(&fil, filename, FA_READ);
-        if (Res) {
-            xil_printf("file %s not found, returning 404\r\n", filename);
-            do_404(sd, req, rlen);
-            return -1;
-        }
+		/* determine file name */
+		extract_file_name(filename, req, rlen, MAX_FILENAME);
 
-        /* respond with correct file */
+		/* respond with 404 if not present */
+		Res = f_open(&fil, filename, FA_READ);
+		if (Res) {
+			xil_printf("file %s not found, returning 404\r\n", filename);
+			do_404(sd, req, rlen);
+			return -1;
+		}
 
-        xil_printf("http GET: %s\r\n", filename);
+		/* respond with correct file */
 
-        /* get a pointer to file extension */
-        fext = get_file_extension(filename);
+		xil_printf("http GET: %s\r\n", filename);
 
-        /* obtain file size */
-        fsize = f_size(&fil);
+		/* get a pointer to file extension */
+		fext = get_file_extension(filename);
 
-        /* write the http headers */
-        hlen = generate_http_header(buf, fext, fsize);
-        if (lwip_write(sd, buf, hlen) != hlen) {
-            xil_printf("error writing http header to socket\r\n");
-            xil_printf("http header = %s\r\n", buf);
-            f_close(&fil);
-            return -1;
-        }
+		/* obtain file size */
+		fsize = f_size(&fil);
 
-        /* now write the file */
-        while (fsize > 0) {
-            int w;
+		/* write the http headers */
+		hlen = generate_http_header(buf, fext, fsize);
+		if (lwip_write(sd, buf, hlen) != hlen) {
+			xil_printf("error writing http header to socket\r\n");
+			xil_printf("http header = %s\r\n", buf);
+			f_close(&fil);
+			return -1;
+		}
 
-            f_read(&fil, (void *)buf, BUFSIZE, (unsigned int *)&n);
-            if ((w = lwip_write(sd, buf, n)) != n) {
-                xil_printf("error writing file (%s) to socket, remaining unwritten bytes = %d\r\n", filename, fsize - n);
-                xil_printf("attempted to lwip_write %d bytes, actual bytes written = %d\r\n", n, w);
-                return -1;
-            }
+		/* now write the file */
+		while (fsize > 0) {
+			int w;
 
-            fsize -= n;
-        }
+			f_read(&fil, (void *) buf, BUFSIZE, (unsigned int *) &n);
+			if ((w = lwip_write(sd, buf, n)) != n) {
+				xil_printf(
+						"error writing file (%s) to socket, remaining unwritten bytes = %d\r\n",
+						filename, fsize - n);
+				xil_printf(
+						"attempted to lwip_write %d bytes, actual bytes written = %d\r\n",
+						n, w);
+				return -1;
+			}
 
-        f_close(&fil);
-    }
+			fsize -= n;
+		}
+
+		f_close(&fil);
+	}
 
 	return 0;
 }
 
-enum http_req_type { HTTP_GET, HTTP_POST, HTTP_UNKNOWN };
-enum http_req_type decode_http_request(char *req, int l)
-{
+enum http_req_type {
+	HTTP_GET, HTTP_POST, HTTP_UNKNOWN
+};
+enum http_req_type decode_http_request(char *req, int l) {
 	char *get_str = "GET";
 	char *post_str = "POST";
 
@@ -305,21 +347,19 @@ enum http_req_type decode_http_request(char *req, int l)
 	return HTTP_UNKNOWN;
 }
 
-void dump_payload(char *p, int len)
-{
+void dump_payload(char *p, int len) {
 	int i, j;
 
 	for (i = 0; i < len; i += 16) {
 		for (j = 0; j < 16; j++)
-			xil_printf("%c ", p[i+j]);
+			xil_printf("%c ", p[i + j]);
 		xil_printf("\r\n");
 	}
 	xil_printf("total len = %d\r\n", len);
 }
 
 /* generate and write out an appropriate response for the http request */
-int generate_response(int sd, char *http_req, int http_req_len)
-{
+int generate_response(int sd, char *http_req, int http_req_len) {
 	enum http_req_type request_type;
 	request_type = decode_http_request(http_req, http_req_len);
 

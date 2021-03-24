@@ -56,3 +56,7 @@ set_property -dict { PACKAGE_PIN L15   IOSTANDARD LVCMOS33 } [get_ports { Pmod_8
 set_property -dict { PACKAGE_PIN J16   IOSTANDARD LVCMOS33 } [get_ports { Pmod_8LD[6] }];         
 set_property -dict { PACKAGE_PIN J14   IOSTANDARD LVCMOS33 } [get_ports { Pmod_8LD[7] }]; 
 
+##RGB LED 6   (master)
+set_property -dict { PACKAGE_PIN V16   IOSTANDARD LVCMOS33 } [get_ports { o_led6_r }]; #IO_L18P_T2_34 Sch=led6_r
+set_property -dict { PACKAGE_PIN F17   IOSTANDARD LVCMOS33 } [get_ports { o_led6_g }]; #IO_L6N_T0_VREF_35 Sch=led6_g
+#set_property -dict { PACKAGE_PIN M17   IOSTANDARD LVCMOS33 } [get_ports { led6_b }]; #IO_L8P_T1_AD10P_35 Sch=led6_b

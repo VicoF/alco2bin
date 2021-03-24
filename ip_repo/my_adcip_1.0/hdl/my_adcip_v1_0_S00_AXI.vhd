@@ -389,7 +389,7 @@ begin
 
 
 	-- Add user logic here
-	o_data_out <= slv_reg1;
+	o_data_out <= slv_reg2;
 	-- User logic ends
 
 end arch_imp;

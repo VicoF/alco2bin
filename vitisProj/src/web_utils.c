@@ -39,6 +39,15 @@ int is_cmd_print(char *buf)
 	return (!strncmp(buf, "cmd", 3) && !strncmp(buf + 4, "printxhr", 8));
 }
 
+int is_cmd_start(char *buf)
+{
+	/* skip past 'POST /' */
+	buf += 6;
+
+	/* then check for cmd/start_test */
+	return (!strncmp(buf, "cmd", 3) && !strncmp(buf + 4, "start_test", 10));
+}
+
 void extract_file_name(char *filename, char *req, int rlen, int maxlen)
 {
 	char *fstart, *fend;

@@ -14,6 +14,8 @@ use UNISIM.VComponents.all;
 entity Top is
 port (
     sys_clock       : in std_logic;
+    o_led6_r       : out std_logic;
+    o_led6_g       : out std_logic;
     o_leds          : out std_logic_vector ( 3 downto 0 );
     i_sw            : in std_logic_vector ( 3 downto 0 );
     i_btn           : in std_logic_vector ( 3 downto 0 );
@@ -153,11 +155,14 @@ architecture Behavioral of Top is
     signal d_strobe_100Hz               : std_logic := '0';  -- cadence echantillonnage AD1
     
     signal reset                        : std_logic; 
+    signal reset_adc                        : std_logic; 
     
     signal o_echantillon_pret_strobe    : std_logic;
     signal d_ADC_Dselect                : std_logic; 
     signal d_echantillon_0                : std_logic_vector (11 downto 0); 
     signal d_echantillon_1                : std_logic_vector (11 downto 0); 
+    signal d_data              : std_logic_vector (31 downto 0); 
+    signal d_do_ethylo_test              : std_logic; 
     signal S_5MHz : STD_LOGIC;
 
 begin
@@ -174,7 +179,7 @@ begin
      
     Controleur :  Ctrl_AD1 
     port map(
-        reset                       => reset,
+        reset                       => reset_adc,
         
         clk_ADC                     => clk_5MHz,                    -- pour horloge externe de l'ADC 
         i_DO                        => i_ADC_D0,               -- bit de données provenant de l'ADC (via um mux)       
@@ -205,7 +210,8 @@ begin
            o_CLK_5MHz   => clk_5MHz,
            o_S_100Hz    => open,
            o_stb_100Hz  => d_strobe_100Hz,
-           o_S_1Hz      => o_ledtemoin_b
+           --o_S_1Hz      => o_ledtemoin_b
+           o_S_1Hz      => open
     );
     o_ADC_CLK <= S_5MHz;
     o_DAC_CLK <= S_5MHz;
@@ -252,8 +258,14 @@ Pmod_OLED_pin10_io => Pmod_OLED(7),
 i_data_echantillon_1 => d_echantillon_1,
 i_data_echantillon_0 => d_echantillon_0,
 i_sw_tri_i => i_sw,
-o_data_out_0 => open,
+o_data_out_0 => d_data,
 o_leds_tri_o => o_leds
-);     
+--o_leds_tri_o => open
+); 
+d_do_ethylo_test <= d_data(0);    
+o_led6_r <= not d_do_ethylo_test;
+o_led6_g <= d_do_ethylo_test;
+reset_adc <= reset or not d_do_ethylo_test;
+--o_leds(0) <= d_data(0);    
 end Behavioral;
 

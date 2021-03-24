@@ -7,7 +7,6 @@
 
 #ifndef SRC_S4I_TOOLS_H_
 #define SRC_S4I_TOOLS_H_
-
 #define S4I_NUM_SWITCHES	4
 
 float voltage_to_alcool(float voltage);
@@ -20,6 +19,8 @@ int 			s4i_is_cmd_ethylo(char *buf);
 
 float AD1_GetSampleVoltage();
 float AD1_GetSampleVoltage1();
+
+void setEthyloEnabled(int enable);
 
 
 #endif /* SRC_S4I_TOOLS_H_ */
