@@ -143,12 +143,18 @@ int do_http_post(int sd, char *req, int rlen) {
 		type[i] = '\0';
 		//check if it correspond to ethylo
 		if(strcmp(type, "ethylo")==0){
-			setEthyloEnabled(1);
-			//todo: check if test is already pending and adapt response
-			char response[] = "{ \"status\": \"success\"}";
-			len = generate_http_header(buf, "jsn", strlen(response));
-			strcpy(buf+len, response);
-			len+= strlen(response);
+			if(readEthyloEnabled()){
+				char response[] = "{ \"status\": \"error\",\n\"message\":\"test already pending\"}";
+					len = generate_http_header(buf, "jsn", strlen(response));
+					strcpy(buf+len, response);
+					len+= strlen(response);
+			}else{
+				setEthyloEnabled(1);
+				char response[] = "{ \"status\": \"success\"}";
+				len = generate_http_header(buf, "jsn", strlen(response));
+				strcpy(buf+len, response);
+				len+= strlen(response);
+			}
 
 		}else if (0){
 		//eventualy add more check here
