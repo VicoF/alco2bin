@@ -94,6 +94,13 @@ int do_404(int sd, char *req, int rlen) {
 
 	return 0;
 }
+//Thread to stop ethylo test automatically after 10 seconds
+int ethylo_thread() {
+	sys_msleep(10000);
+	setEthyloEnabled(0);
+	vTaskDelete(NULL);
+	return 0;
+}
 
 int do_http_post(int sd, char *req, int rlen) {
 	int BUFSIZE = 1024;
@@ -150,6 +157,8 @@ int do_http_post(int sd, char *req, int rlen) {
 					len+= strlen(response);
 			}else{
 				setEthyloEnabled(1);
+				sys_thread_new("ethylo_test_thread", ethylo_thread, NULL,
+							64, DEFAULT_THREAD_PRIO);
 				char response[] = "{ \"status\": \"success\"}";
 				len = generate_http_header(buf, "jsn", strlen(response));
 				strcpy(buf+len, response);
