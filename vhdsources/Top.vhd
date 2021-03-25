@@ -183,7 +183,8 @@ architecture Behavioral of Top is
     i_data_echantillon_0 : in STD_LOGIC_VECTOR ( 11 downto 0 );
     i_sw_tri_i : in STD_LOGIC_VECTOR ( 3 downto 0 );
     o_data_out_0 : out STD_LOGIC_VECTOR ( 31 downto 0 );
-    o_leds_tri_o : out STD_LOGIC_VECTOR ( 3 downto 0 )
+    o_leds_tri_o : out STD_LOGIC_VECTOR ( 3 downto 0 );
+    i_data_maxPico : in std_logic_vector(7 downto 0)
   );
   end component;
     
@@ -349,7 +350,8 @@ i_data_echantillon_1 => d_echantillon_1,
 i_data_echantillon_0 => d_echantillon_0,
 i_sw_tri_i => i_sw,
 o_data_out_0 => d_data,
-o_leds_tri_o => o_leds
+o_leds_tri_o => o_leds,
+i_data_maxPico => out_port
 --o_leds_tri_o => open
 ); 
 d_do_ethylo_test <= d_data(0);    
