@@ -50,11 +50,13 @@ proc checkRequiredFiles { origin_dir} {
    "$origin_dir/../vhdSources/compteur_nbits.vhd" \
    "$origin_dir/../constraints/Atelier3_Constraintes.xdc" \
    "$origin_dir/../vhdsim/top_tb.vhd" \
+   "$origin_dir/../vhdsim/testfct2_3.vhd" \
    "$origin_dir/../vhdSources/AD7476_mef.vhd" \
    "$origin_dir/../vhdSources/Ctrl_AD1.vhd" \
    "$origin_dir/../vhdSources/Synchro_Horloges.vhd" \
    "$origin_dir/../vhdSources/reg_dec_24b.vhd" \
    "$origin_dir/../vhdSources/Top.vhd" \
+   "$origin_dir/../vhdSources/kcpsm6.vhd"\
   ]
   foreach ifile $files {
     if { ![file isfile $ifile] } {
@@ -213,6 +215,7 @@ set files [list \
  [file normalize "${origin_dir}/../vhdSources/Ctrl_DAC.vhd"] \
  [file normalize "${origin_dir}/../vhdSources/MEF_DAC.vhd"] \
  [file normalize "${origin_dir}/../vhdSources/compteur_nbits.vhd"] \
+ [file normalize "${origin_dir}/../vhdSources/kcpsm6.vhd"] \
 ]
 # ==>Ne pas créer de copies locales des fichiers sources dans le projet Vivado et garder une seule et unique version
 
@@ -260,6 +263,11 @@ set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
+set file "$origin_dir/../vhdSources/kcpsm6.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
 
 # Set 'sources_1' fileset properties
 set obj [get_filesets sources_1]
@@ -294,6 +302,7 @@ set obj [get_filesets sim_1]
 # Import local files from the original project
 set files [list \
  [file normalize "${origin_dir}/../vhdsim/top_tb.vhd" ]\
+ [file normalize "${origin_dir}/../vhdsim/testfct2_3.vhd" ]\
 ]
 set imported_files [import_files -fileset sim_1 $files]
 
@@ -308,6 +317,12 @@ set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sim_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
+set file "[file normalize ${origin_dir}/../vhdsim/kcpsm6.vhd]"
+set file_added [add_files -norecurse -fileset $obj [list $file]]
+set file "${origin_dir}/../vhdsim/kcpsm6.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sim_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 # Set 'sim_1' fileset properties
 set obj [get_filesets sim_1]
