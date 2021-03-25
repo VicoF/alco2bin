@@ -18,7 +18,7 @@ entity my_adcip_v1_0_S00_AXI is
 		-- Users to add ports here
         i_data_echantillon_0 : in std_logic_vector(11 downto 0);
         i_data_echantillon_1 : in std_logic_vector(11 downto 0);
-        i_data_maxPico : in std_logic_vector ( 7 downto 0);
+        i_data_maxPico : in std_logic_vector ( 11 downto 0);
         o_data_out : out std_logic_vector(31 downto 0);
 		-- User ports ends
 		-- Do not modify the ports beyond this line
@@ -357,8 +357,8 @@ begin
 	    case loc_addr is
 	      when b"00" =>
 	        reg_data_out(11 downto 0) <= i_data_echantillon_0;
-	        reg_data_out(19 downto 12) <= i_data_maxPico;
-            reg_data_out(31 downto 20) <= (others => '0');
+	        reg_data_out(23 downto 12) <= i_data_maxPico;
+            reg_data_out(31 downto 24) <= (others => '0');
 	      when b"01" =>
 	        reg_data_out(11 downto 0) <= i_data_echantillon_1;
 	        reg_data_out(31 downto 12) <= (others => '0');

@@ -253,6 +253,7 @@ int do_http_get(int sd, char *req, int rlen) {
 		float alcool = voltage_to_alcool(volt_alcool);
 		float volt_max_alcool = AD1_GetMaxAlcoolVoltage();
 		float maxAlcool = voltage_to_alcool(volt_max_alcool);
+		xil_printf("maxAlcool voltage: %.1f\n macAlcool: %.3f\n", volt_max_alcool, maxAlcool);
 
 		char* ethy_buf[50];
 		sprintf(ethy_buf, "{\n\"flow\": %.2f,\n\"alcool\": %.2f,\n\"maxAlcool\":%.2f}", flow,

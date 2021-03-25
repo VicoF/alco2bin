@@ -184,7 +184,7 @@ architecture Behavioral of Top is
     i_sw_tri_i : in STD_LOGIC_VECTOR ( 3 downto 0 );
     o_data_out_0 : out STD_LOGIC_VECTOR ( 31 downto 0 );
     o_leds_tri_o : out STD_LOGIC_VECTOR ( 3 downto 0 );
-    i_data_maxPico : in std_logic_vector(7 downto 0)
+    i_data_maxPico : in std_logic_vector(11 downto 0)
   );
   end component;
     
@@ -197,8 +197,11 @@ architecture Behavioral of Top is
     
     signal o_echantillon_pret_strobe    : std_logic;
     signal d_ADC_Dselect                : std_logic; 
-    signal d_echantillon_0                : std_logic_vector (11 downto 0); 
+    signal d_echantillon_0                : std_logic_vector (11 downto 0):= (others=> '0'); 
     signal d_echantillon_1                : std_logic_vector (11 downto 0); 
+    signal d_adc_echantillon_0                : std_logic_vector (11 downto 0); 
+    signal d_adc_echantillon_1                : std_logic_vector (11 downto 0); 
+    signal d_data_maxpico            : std_logic_vector (11 downto 0); 
     signal d_data              : std_logic_vector (31 downto 0); 
     signal d_do_ethylo_test              : std_logic; 
     signal S_5MHz : STD_LOGIC;
@@ -246,14 +249,29 @@ begin
             k_write_strobe => k_write_strobe,
                   out_port => out_port,
                read_strobe => read_strobe,
-                   in_port => d_echantillon_0(11 downto 4),
+                   in_port => in_port,
                  interrupt => interrupt,
              interrupt_ack => interrupt_ack,
                      sleep => kcpsm6_sleep,
                      reset => kcpsm6_reset,
                        clk => sys_clock
            );
-     
+       output_pico: process(sys_clock)
+       begin
+        if write_strobe = '1' then
+            d_data_maxpico<= out_port&"0000";
+            --d_data_maxpico <= "111111110000";
+        end if;
+       end process;
+       input_ports: process(sys_clock)
+      begin
+        if sys_clock'event and sys_clock = '1' then
+          in_port(7 downto 0) <= d_echantillon_0(11 downto 4);
+        end if;
+    
+      end process input_ports;
+      --d_data_maxpico<= out_port&"0000";
+      --d_data_maxpico <= "111111110000";
      program_rom: myProgram                            --Name to match your PSM file
     generic map(             
             C_FAMILY => "7S",                       --Family 'S6', 'V6' or '7S'
@@ -279,9 +297,19 @@ begin
         
         i_ADC_Strobe                => d_strobe_100Hz,              -- synchronisation: déclencheur de la séquence d'échantillonnage 
         o_echantillon_pret_strobe   => o_echantillon_pret_strobe,   -- strobe indicateur d'une réception complète d'un échantillon 
-        o_echantillon_0               => d_echantillon_0,                -- valeur de l'échantillon reçu (12 bits)
-        o_echantillon_1               => d_echantillon_1                -- valeur de l'échantillon reçu (12 bits)
+        o_echantillon_0               => d_adc_echantillon_0,                -- valeur de l'échantillon reçu (12 bits)
+        o_echantillon_1               => d_adc_echantillon_1                -- valeur de l'échantillon reçu (12 bits)
     );
+    
+    --update echantillon signal only when it is ready
+    output_adc: process(sys_clock)
+       begin
+        if o_echantillon_pret_strobe = '1' then
+            d_echantillon_0 <= d_adc_echantillon_0;
+            d_echantillon_1 <= d_adc_echantillon_1;
+        end if;
+       end process;
+    
     
     controleur_DAC: Ctrl_DAC 
     port map(
@@ -351,7 +379,7 @@ i_data_echantillon_0 => d_echantillon_0,
 i_sw_tri_i => i_sw,
 o_data_out_0 => d_data,
 o_leds_tri_o => o_leds,
-i_data_maxPico => out_port
+i_data_maxPico => d_data_maxPico
 --o_leds_tri_o => open
 ); 
 d_do_ethylo_test <= d_data(0);    
