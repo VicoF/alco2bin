@@ -209,6 +209,7 @@ proc create_root_design { parentCell } {
   # Create ports
   set i_data_echantillon_0 [ create_bd_port -dir I -from 11 -to 0 i_data_echantillon_0 ]
   set i_data_echantillon_1 [ create_bd_port -dir I -from 11 -to 0 i_data_echantillon_1 ]
+  set i_data_maxPico_0 [ create_bd_port -dir I -from 7 -to 0 i_data_maxPico_0 ]
   set o_data_out_0 [ create_bd_port -dir O -from 31 -to 0 o_data_out_0 ]
 
   # Create instance: PmodGPIO_0, and set properties
@@ -741,6 +742,7 @@ proc create_root_design { parentCell } {
   # Create port connections
   connect_bd_net -net i_data_echantillon_0_0_1 [get_bd_ports i_data_echantillon_0] [get_bd_pins my_adcip_0/i_data_echantillon_0]
   connect_bd_net -net i_data_echantillon_1_0_1 [get_bd_ports i_data_echantillon_1] [get_bd_pins my_adcip_0/i_data_echantillon_1]
+  connect_bd_net -net i_data_maxPico_0_1 [get_bd_ports i_data_maxPico_0] [get_bd_pins my_adcip_0/i_data_maxPico]
   connect_bd_net -net my_adcip_0_o_data_out [get_bd_ports o_data_out_0] [get_bd_pins my_adcip_0/o_data_out]
   connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins PmodGPIO_0/s_axi_aclk] [get_bd_pins PmodOLED_0/s_axi_aclk] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins my_adcip_0/s00_axi_aclk] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins ps7_0_axi_periph/ACLK] [get_bd_pins ps7_0_axi_periph/M00_ACLK] [get_bd_pins ps7_0_axi_periph/M01_ACLK] [get_bd_pins ps7_0_axi_periph/M02_ACLK] [get_bd_pins ps7_0_axi_periph/M03_ACLK] [get_bd_pins ps7_0_axi_periph/M04_ACLK] [get_bd_pins ps7_0_axi_periph/M05_ACLK] [get_bd_pins ps7_0_axi_periph/S00_ACLK] [get_bd_pins rst_ps7_0_50M/slowest_sync_clk]
   connect_bd_net -net processing_system7_0_FCLK_RESET0_N [get_bd_pins processing_system7_0/FCLK_RESET0_N] [get_bd_pins rst_ps7_0_50M/ext_reset_in]

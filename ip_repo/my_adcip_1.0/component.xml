@@ -878,8 +878,8 @@
         <xilinx:taxonomy>AXI_Peripheral</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>my_adcip_v1.0</xilinx:displayName>
-      <xilinx:coreRevision>7</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2021-03-25T13:53:38Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>9</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2021-03-25T14:49:52Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="ui.data.coregen.dd@4222694e_ARCHIVE_LOCATION">d:/julie/Documents/S4/Projet/ip_repo/my_adcip_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.dd@1d4a5947_ARCHIVE_LOCATION">d:/julie/Documents/S4/Projet/ip_repo/my_adcip_1.0</xilinx:tag>
@@ -961,6 +961,16 @@
         <xilinx:tag xilinx:name="ui.data.coregen.dd@39e34287_ARCHIVE_LOCATION">c:/Users/utilisateur/Desktop/Ecole_note_de_cours/S4/projet/officiel/alco2bin/ip_repo/my_adcip_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.dd@51073509_ARCHIVE_LOCATION">c:/Users/utilisateur/Desktop/Ecole_note_de_cours/S4/projet/officiel/alco2bin/ip_repo/my_adcip_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.dd@24bfd81c_ARCHIVE_LOCATION">c:/Users/utilisateur/Desktop/Ecole_note_de_cours/S4/projet/officiel/alco2bin/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4ce1127b_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@777a174b_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@33a858ce_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@34701af5_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@26cd399_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5d5e8125_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@68b2f851_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6fd54128_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5ec6d2d1_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@67c3e362_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
