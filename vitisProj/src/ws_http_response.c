@@ -151,7 +151,7 @@ int do_http_post(int sd, char *req, int rlen) {
 		//check if it correspond to ethylo
 		if(strcmp(type, "ethylo")==0){
 			if(readEthyloEnabled()){
-				char response[] = "{ \"status\": \"error\",\n\"message\":\"test already pending\"}";
+				char response[] = "{ \"status\": \"error\",\n\"message\":\"Test deja en cours\"}";
 					len = generate_http_header(buf, "jsn", strlen(response));
 					strcpy(buf+len, response);
 					len+= strlen(response);
