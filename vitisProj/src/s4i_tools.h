@@ -19,6 +19,7 @@ int 			s4i_is_cmd_ethylo(char *buf);
 
 float AD1_GetSampleVoltage();
 float AD1_GetSampleVoltage1();
+float AD1_GetMaxAlcoolVoltage();
 
 void setEthyloEnabled(int enable);
 

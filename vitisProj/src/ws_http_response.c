@@ -236,9 +236,12 @@ int do_http_get(int sd, char *req, int rlen) {
 		//float alcool = (float)(rand()%100) / 100;
 		float volt_alcool = AD1_GetSampleVoltage();
 		float alcool = voltage_to_alcool(volt_alcool);
+		float volt_max_alcool = AD1_GetMaxAlcoolVoltage();
+		float maxAlcool = voltage_to_alcool(volt_max_alcool);
+
 		char* ethy_buf[50];
-		sprintf(ethy_buf, "{\n\"flow\": %.2f,\n\"alcool\": %.2f\n}", flow,
-				alcool);
+		sprintf(ethy_buf, "{\n\"flow\": %.2f,\n\"alcool\": %.2f,\n\"maxAlcool\":%.2f}", flow,
+				alcool, maxAlcool);
 		unsigned int ethy_len = strlen(ethy_buf);
 		unsigned int len = generate_http_header(buf, "js", ethy_len);
 		strcat(buf, ethy_buf);

@@ -76,6 +76,13 @@ u16 AD1_GetSampleRaw()
 	return rawData;
 }
 
+u16 AD1_GetMaxAlcoolRaw()
+{
+	u16 rawData =  (MY_ADCIP_mReadReg(MY_AD1_IP_BASEADDRESS, 0x0)>> 12 )& 0xFF;
+	return rawData;
+}
+
+
 u16 AD1_GetSampleRaw1()
 {
 	u16 rawData =  MY_ADCIP_mReadReg(MY_AD1_IP_BASEADDRESS, 0x4) & 0xFFF;
@@ -98,6 +105,16 @@ float AD1_GetSampleVoltage()
 	float conversionFactor = ReferenceVoltage / ((1 << AD1_NUM_BITS) - 1);
 
 	u16 rawSample = AD1_GetSampleRaw();
+
+	return (float)rawSample * conversionFactor;
+
+}
+
+float AD1_GetMaxAlcoolVoltage()
+{
+	float conversionFactor = ReferenceVoltage / ((1 << AD1_NUM_BITS) - 1);
+
+	u16 rawSample = AD1_GetMaxAlcoolRaw();
 
 	return (float)rawSample * conversionFactor;
 
