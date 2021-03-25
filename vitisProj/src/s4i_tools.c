@@ -100,6 +100,12 @@ void setEthyloEnabled(int enable)
 
 }
 
+int readEthyloEnabled()
+{
+	return MY_ADCIP_mReadReg(MY_AD1_IP_BASEADDRESS, 0x8)& 0x001; //apply a mask to get only lsb
+
+}
+
 float AD1_GetSampleVoltage()
 {
 	float conversionFactor = ReferenceVoltage / ((1 << AD1_NUM_BITS) - 1);
