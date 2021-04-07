@@ -94,6 +94,15 @@ int readEthyloEnabled() {
 
 }
 
+void startReflexTest() {
+	MY_ADCIP_mWriteReg(MY_AD1_IP_BASEADDRESS, 0x8, 2); //second bit is for reflex test, first one is for ethylo
+}
+
+int readReflexTestEnabled() {
+	return MY_ADCIP_mReadReg(MY_AD1_IP_BASEADDRESS, 0x8) & 0x002; //apply a mask to get only bit #2
+
+}
+
 float AD1_GetSampleVoltage() {
 	float conversionFactor = ReferenceVoltage / ((1 << AD1_NUM_BITS) - 1);
 
