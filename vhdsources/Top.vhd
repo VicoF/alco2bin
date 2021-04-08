@@ -204,6 +204,7 @@ architecture Behavioral of Top is
     signal d_data_maxpico            : std_logic_vector (11 downto 0); 
     signal d_data              : std_logic_vector (31 downto 0); 
     signal d_do_ethylo_test              : std_logic; 
+    signal d_do_reflex_test              : std_logic; 
     signal S_5MHz : STD_LOGIC;
     
     signal         address : std_logic_vector(11 downto 0);
@@ -383,8 +384,10 @@ i_data_maxPico_0 => d_data_maxPico
 --o_leds_tri_o => open
 ); 
 d_do_ethylo_test <= d_data(0);    
+d_do_reflex_test <= d_data(1);    
 o_led6_r <= not d_do_ethylo_test;
 o_led6_g <= d_do_ethylo_test;
+o_ledtemoin_b <= d_do_reflex_test;
 reset_adc <= reset or not d_do_ethylo_test;
 --o_leds(0) <= d_data(0);    
 end Behavioral;
