@@ -209,7 +209,7 @@ proc create_root_design { parentCell } {
   # Create ports
   set i_data_echantillon_0 [ create_bd_port -dir I -from 11 -to 0 i_data_echantillon_0 ]
   set i_data_echantillon_1 [ create_bd_port -dir I -from 11 -to 0 i_data_echantillon_1 ]
-  set i_data_maxPico_0 [ create_bd_port -dir I -from 7 -to 0 i_data_maxPico_0 ]
+  set i_data_maxPico_0 [ create_bd_port -dir I -from 11 -to 0 i_data_maxPico_0 ]
   set o_data_out_0 [ create_bd_port -dir O -from 31 -to 0 o_data_out_0 ]
 
   # Create instance: PmodGPIO_0, and set properties
