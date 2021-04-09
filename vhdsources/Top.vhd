@@ -187,6 +187,13 @@ architecture Behavioral of Top is
     i_data_maxPico_0 : in std_logic_vector(11 downto 0)
   );
   end component;
+  
+  component test_reflex is
+    Port ( i_clk : in STD_LOGIC;
+           i_strobe_start : in STD_LOGIC;
+           o_time : out STD_LOGIC_VECTOR (8 downto 0);
+           i_strobe_end : in STD_LOGIC);
+end component;
     
     signal clk_5MHz                     : std_logic;
     signal d_S_5MHz                     : std_logic;
@@ -203,8 +210,13 @@ architecture Behavioral of Top is
     signal d_adc_echantillon_1                : std_logic_vector (11 downto 0); 
     signal d_data_maxpico            : std_logic_vector (11 downto 0); 
     signal d_data              : std_logic_vector (31 downto 0); 
+    signal d_reflex_cs              : std_logic_vector (8 downto 0); 
     signal d_do_ethylo_test              : std_logic; 
+    signal strobe_start_reflex              : std_logic; 
+    signal strobe_stop_reflex              : std_logic; 
     signal d_do_reflex_test              : std_logic; 
+    signal last_d_do_reflex_test              : std_logic; 
+    signal last_i_btn             : std_logic_vector(3 downto 0); 
     signal S_5MHz : STD_LOGIC;
     
     signal         address : std_logic_vector(11 downto 0);
@@ -235,6 +247,25 @@ begin
             d_ADC_Dselect <= i_ADC_D1;
           end if;
      end process;
+     
+     reflex_process: process(sys_clock)
+        begin
+                    strobe_stop_reflex <= '0';
+            strobe_start_reflex <= '0';
+            if(sys_clock'event and sys_clock ='1') then
+                if(d_do_reflex_test='1' and last_d_do_reflex_test ='0') then
+                    strobe_start_reflex<= '1';
+                else strobe_start_reflex <= '0';
+                end if;
+                if(i_btn(0) = '1' and last_i_btn(0) = '0') then
+                    strobe_stop_reflex <= '1';
+                else strobe_stop_reflex <= '0';
+                end if;
+           
+            end if;
+            last_d_do_reflex_test<=d_do_reflex_test;
+            last_i_btn<= i_btn;
+        end process;
      
       processor: kcpsm6
     generic map (                 
@@ -383,6 +414,20 @@ o_leds_tri_o => o_leds,
 i_data_maxPico_0 => d_data_maxPico
 --o_leds_tri_o => open
 ); 
+
+
+
+  reflex: test_reflex 
+    Port map ( i_clk => d_strobe_100Hz,
+           i_strobe_start => strobe_stop_reflex,
+           o_time => d_reflex_cs,
+           i_strobe_end => strobe_stop_reflex
+           );
+
+
+
+
+
 d_do_ethylo_test <= d_data(0);    
 d_do_reflex_test <= d_data(1);    
 o_led6_r <= not d_do_ethylo_test;
