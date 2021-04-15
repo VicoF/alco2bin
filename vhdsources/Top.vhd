@@ -184,7 +184,7 @@ architecture Behavioral of Top is
     i_sw_tri_i : in STD_LOGIC_VECTOR ( 3 downto 0 );
     o_data_out_0 : out STD_LOGIC_VECTOR ( 31 downto 0 );
     o_leds_tri_o : out STD_LOGIC_VECTOR ( 3 downto 0 );
-    i_data_maxPico : in std_logic_vector(11 downto 0)
+    i_data_maxPico_0 : in std_logic_vector(11 downto 0)
   );
   end component;
   
@@ -411,7 +411,7 @@ i_data_echantillon_0 => d_echantillon_0,
 i_sw_tri_i => i_sw,
 o_data_out_0 => d_data,
 o_leds_tri_o => o_leds,
-i_data_maxPico => d_data_maxPico
+i_data_maxPico_0 => d_data_maxPico
 --o_leds_tri_o => open
 ); 
 
