@@ -222,6 +222,7 @@ architecture Behavioral of Top is
     
     signal q_leds          : std_logic_vector ( 3 downto 0 ) := (others => '1');
     signal q_Pmod_8LD      : std_logic_vector ( 7 downto 0 ) := (others => '1');
+    signal bonne_valeur_flow : std_logic;
 
 begin
     reset    <= i_btn(0);    
@@ -233,6 +234,15 @@ begin
           else
             d_ADC_Dselect <= i_ADC_D1;
           end if;
+     end process;
+     
+     read_pico: process(sys_clock)
+     begin
+     if bonne_valeur_flow = '1' then
+     read_strobe <= '0';
+     else
+     read_strobe <= '1';
+     end if;
      end process;
      
       processor: kcpsm6
@@ -300,6 +310,17 @@ begin
         o_echantillon_0               => d_adc_echantillon_0,                -- valeur de l'échantillon reçu (12 bits)
         o_echantillon_1               => d_adc_echantillon_1                -- valeur de l'échantillon reçu (12 bits)
     );
+    
+    
+    
+    bonne_valeur : process(sys_clock)
+    begin
+    if d_adc_echantillon_1 > "011001100011" and d_adc_echantillon_1 < "100110011001" then
+    bonne_valeur_flow <= '0';
+    else
+    bonne_valeur_flow <= '1';
+    end if;
+    end process;
     
     --update echantillon signal only when it is ready
     output_adc: process(sys_clock)
