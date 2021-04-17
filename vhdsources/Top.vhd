@@ -188,14 +188,19 @@ architecture Behavioral of Top is
   );
   end component;
   
-  component test_reflex is
+  component reflex is
     Port ( i_clk : in STD_LOGIC;
+            i_cpt_clk : in STD_LOGIC;
            i_strobe_start : in STD_LOGIC;
-           o_time : out STD_LOGIC_VECTOR (8 downto 0);
-           i_strobe_end : in STD_LOGIC);
+           o_strobe_end : out STD_LOGIC;
+           o_data : out STD_LOGIC_VECTOR(8 downto 0);
+            o_green: out std_logic;
+           o_red: out std_logic;
+           i_btn: in STD_LOGIC);
 end component;
     
     signal clk_5MHz                     : std_logic;
+    signal clk_100Hz                     : std_logic;
     signal d_S_5MHz                     : std_logic;
     signal d_strobe_100Hz               : std_logic := '0';  -- cadence echantillonnage AD1
     
@@ -215,8 +220,8 @@ end component;
     signal strobe_start_reflex              : std_logic; 
     signal strobe_stop_reflex              : std_logic; 
     signal d_do_reflex_test              : std_logic; 
+    signal d_stop_reflex_test              : std_logic:='0'; 
     signal last_d_do_reflex_test              : std_logic; 
-    signal last_i_btn             : std_logic_vector(3 downto 0); 
     signal S_5MHz : STD_LOGIC;
     
     signal         address : std_logic_vector(11 downto 0);
@@ -250,21 +255,16 @@ begin
      
      reflex_process: process(sys_clock)
         begin
-                    strobe_stop_reflex <= '0';
+                   
             strobe_start_reflex <= '0';
             if(sys_clock'event and sys_clock ='1') then
                 if(d_do_reflex_test='1' and last_d_do_reflex_test ='0') then
                     strobe_start_reflex<= '1';
                 else strobe_start_reflex <= '0';
                 end if;
-                if(i_btn(0) = '1' and last_i_btn(0) = '0') then
-                    strobe_stop_reflex <= '1';
-                else strobe_stop_reflex <= '0';
-                end if;
-           
+           last_d_do_reflex_test<=d_do_reflex_test;
             end if;
-            last_d_do_reflex_test<=d_do_reflex_test;
-            last_i_btn<= i_btn;
+            
         end process;
      
       processor: kcpsm6
@@ -359,7 +359,7 @@ begin
            clkm         =>  sys_clock,
            o_S_5MHz     =>  S_5MHz,
            o_CLK_5MHz   => clk_5MHz,
-           o_S_100Hz    => open,
+           o_S_100Hz    => clk_100Hz,
            o_stb_100Hz  => d_strobe_100Hz,
            --o_S_1Hz      => o_ledtemoin_b
            o_S_1Hz      => open
@@ -410,29 +410,30 @@ i_data_echantillon_1 => d_echantillon_1,
 i_data_echantillon_0 => d_echantillon_0,
 i_sw_tri_i => i_sw,
 o_data_out_0 => d_data,
-o_leds_tri_o => o_leds,
+o_leds_tri_o => open,
 i_data_maxPico_0 => d_data_maxPico
 --o_leds_tri_o => open
 ); 
 
 
 
-  reflex: test_reflex 
-    Port map ( i_clk => d_strobe_100Hz,
-           i_strobe_start => strobe_stop_reflex,
-           o_time => d_reflex_cs,
-           i_strobe_end => strobe_stop_reflex
+  test_reflex:  reflex
+    Port map ( i_clk => sys_clock,
+            i_cpt_clk => clk_100Hz,
+           i_strobe_start => strobe_start_reflex,
+           o_data => d_reflex_cs,
+           o_strobe_end => strobe_stop_reflex,
+            o_green=>o_led6_g,
+           o_red=>o_led6_r,
+           i_btn => i_btn(1)
            );
 
-
-
-
-
+o_leds(1)<= i_btn(1);
 d_do_ethylo_test <= d_data(0);    
 d_do_reflex_test <= d_data(1);    
-o_led6_r <= not d_do_ethylo_test;
-o_led6_g <= d_do_ethylo_test;
-o_ledtemoin_b <= d_do_reflex_test;
+--o_led6_r <= not d_do_ethylo_test or strobe_stop_reflex;
+--o_led6_g <= d_do_ethylo_test;
+--o_ledtemoin_b <= d_do_reflex_test and not strobe_stop_reflex;
 reset_adc <= reset or not d_do_ethylo_test;
 --o_leds(0) <= d_data(0);    
 end Behavioral;
