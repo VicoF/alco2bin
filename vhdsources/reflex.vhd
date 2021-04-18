@@ -108,6 +108,8 @@ case curr_state is
     when WAIT_DELAY =>
         if(d_val_cpt >= d_delay) then
             next_state<= RESET_CPT2;
+       elsif(i_btn='1') then  
+            next_state<=SEND_ERROR;
         else next_state<= curr_state;
         end if;
                 
