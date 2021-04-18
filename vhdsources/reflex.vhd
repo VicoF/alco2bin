@@ -48,7 +48,8 @@ generic (nbits : integer := 8);
    port ( clk             : in    std_logic; 
           i_en            : in    std_logic; 
           reset           : in    std_logic; 
-          o_val_cpt       : out   std_logic_vector (nbits-1 downto 0)
+          o_val_cpt       : out   std_logic_vector (nbits-1 downto 0);
+          o_overflow : out std_logic
           );
 end component;
 signal enable : std_logic;
@@ -57,6 +58,7 @@ signal d_delay: STD_LOGIC_VECTOR(8 downto 0);
 signal d_en_cpt: STD_LOGIC;
 signal d_reset_cpt: STD_LOGIC;
 signal d_next_delay: STD_LOGIC;
+signal d_overflow: STD_LOGIC;
 signal index: integer:=0;
 
 type tableau is array (integer range 0 to 8) of std_logic_vector(8 downto 0);
@@ -82,7 +84,7 @@ constant delay_tab : tableau := (
 );
 
 
-type state is (IDLE, WAIT_DELAY, RESET_CPT, TIMER, SEND_RESULT, SEND_ERROR);
+type state is (IDLE, RESET_CPT1, WAIT_DELAY, RESET_CPT2, TIMER, SEND_RESULT, SEND_ERROR);
 signal curr_state, next_state: state := IDLE;
 begin
 
@@ -98,20 +100,24 @@ begin
 case curr_state is 
     when IDLE=>
         if(i_strobe_start='1') then 
-            next_state<= WAIT_DELAY;
+            next_state<= RESET_CPT1;
         else next_state<= curr_state;
         end if;
+    when RESET_CPT1 =>
+        next_state<=  WAIT_DELAY;
     when WAIT_DELAY =>
         if(d_val_cpt >= d_delay) then
-            next_state<= RESET_CPT;
+            next_state<= RESET_CPT2;
         else next_state<= curr_state;
         end if;
                 
-    when RESET_CPT =>
+    when RESET_CPT2 =>
         next_state<=  TIMER;
     when TIMER =>
              if(i_btn='1') then  
                 next_state<=SEND_RESULT;
+             elsif (d_overflow = '1') then 
+                next_state <= SEND_ERROR;
              else next_state<= curr_state;
              end if;
              
@@ -125,17 +131,17 @@ end process;
 process(i_clk, d_next_delay)
 begin
 if(d_next_delay='1') then
-index<= index+1;
-if(index>8) then
+if(index=8) then
 index<= 0;
+else index<= index+1;
 end if;
 d_delay <= delay_tab(index);
 end if;
 end process;
 
 with curr_state select d_en_cpt <= '1' WHEN WAIT_DELAY|TIMER, '0' when others;
-with curr_state select d_reset_cpt <= '1' WHEN IDLE|RESET_CPT, '0' when others;
-with curr_state select o_data <= d_val_cpt WHEN SEND_RESULT, "000000000" when others;
+with curr_state select d_reset_cpt <= '1' WHEN RESET_CPT1|RESET_CPT2|SEND_ERROR, '0' when others;
+with curr_state select o_data <= d_val_cpt WHEN SEND_RESULT |IDLE, "000000000" when others;
 with curr_state select o_strobe_end <= '1' WHEN SEND_RESULT|SEND_ERROR, '0' when others;
 with curr_state select d_next_delay <= '1' WHEN IDLE, '0' when others;
 with curr_state select o_red <= '0' WHEN TIMER, '1' when others;
@@ -146,7 +152,8 @@ port map (
 clk => i_cpt_clk,
 i_en => d_en_cpt,
 reset => d_reset_cpt,
-o_val_cpt => d_val_cpt
+o_val_cpt => d_val_cpt,
+o_overflow => d_overflow
 );
 
 end Behavioral;

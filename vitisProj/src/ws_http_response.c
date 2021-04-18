@@ -180,7 +180,6 @@ int do_http_post(int sd, char *req, int rlen) {
 							len = generate_http_header(buf, "jsn", strlen(response));
 							strcpy(buf + len, response);
 							len += strlen(response);
-
 		}
 		//type not found, returning an error
 		else {
@@ -306,6 +305,25 @@ int do_http_get(int sd, char *req, int rlen) {
 		OLED_SetCursor(&oledDevice, 13, 3);
 		OLED_PutString(&oledDevice, "g/L");
 		OLED_Update(&oledDevice);
+	}else if(s4i_is_cmd_reflex(req)){
+		xil_printf("!!! HTTP GET: cmd/reflex\r\n");
+		xil_printf("result: %u\n",get_reflex_result());
+
+		char* reflex_buf[50];
+				sprintf(reflex_buf,
+						"{\n\"success\": \"%s\",\n\"result\": %u}",
+						get_reflex_status(), get_reflex_result());
+				unsigned int reflex_len = strlen(reflex_buf);
+				unsigned int len = generate_http_header(buf, "js", reflex_len);
+				strcat(buf, reflex_buf);
+				len += reflex_len;
+
+				// Écriture sur le socket.
+				if (lwip_write(sd, buf, len) != len) {
+					xil_printf("Error writing GET response to socket\r\n");
+					xil_printf("http header = %s\r\n", buf);
+					return -1;
+				}
 	}
 
 	else {

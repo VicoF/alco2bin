@@ -24,6 +24,9 @@ float AD1_GetMaxAlcoolVoltage();
 void setEthyloEnabled(int enable);
 int readEthyloEnabled();
 void startReflexTest();
-
+int is_reflex_finished();
+int get_reflex_result();
+int is_reflex_error();
+char* get_reflex_status();
 
 #endif /* SRC_S4I_TOOLS_H_ */

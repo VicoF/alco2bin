@@ -68,6 +68,9 @@ signal i_strobe_start :  STD_LOGIC;
     signal       o_green:  std_logic;
     signal       o_red:  std_logic;
      signal      i_btn:  STD_LOGIC;
+     signal      reflex_test_done:  STD_LOGIC:='0';
+     signal      d_do_reflex_test:  STD_LOGIC:='0';
+     signal      last_d_do_reflex_test:  STD_LOGIC:='0';
 constant sim_sys_clk_period : time := 20ns;
 constant second : time := 1000ms;
 begin
@@ -101,14 +104,35 @@ begin
  i_btn =>i_btn
     );
     
+    reflex_process: process(sim_sys_clock, d_do_reflex_test, last_d_do_reflex_test,o_strobe_end )
+        begin
+            if(sim_sys_clock'event and sim_sys_clock ='1') then
+                if(d_do_reflex_test='1' and last_d_do_reflex_test ='0') then
+                    i_strobe_start<= '1';
+                    reflex_test_done<='0';
+                elsif(o_strobe_end='1') then
+        reflex_test_done<='1';
+        i_strobe_start <= '0';
+                else i_strobe_start <= '0';
+                end if;
+           last_d_do_reflex_test<=d_do_reflex_test;
+            end if;
+            
+        end process;
+    
+
+    
      TB: process
     
         begin
             
         WAIT for sim_sys_clk_period; 
-        i_strobe_start <= '1';
-        WAIT for second*2; 
+        d_do_reflex_test <= '1';
+        WAIT for second*1; 
+        d_do_reflex_test <= '0';
         i_btn <= '1';
+         WAIT for sim_sys_clk_period*10; 
+         d_do_reflex_test <= '1';
         WAIT;
         end process;
     
