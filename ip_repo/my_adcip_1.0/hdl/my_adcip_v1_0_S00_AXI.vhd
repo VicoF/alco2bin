@@ -20,6 +20,7 @@ entity my_adcip_v1_0_S00_AXI is
         i_data_echantillon_1 : in std_logic_vector(11 downto 0);
         i_data_maxPico : in std_logic_vector ( 11 downto 0);
         i_data_reflex : in std_logic_vector ( 9 downto 0);
+        i_data_moy_0 : in std_logic_vector ( 11 downto 0);
         o_data_out : out std_logic_vector(31 downto 0);
 		-- User ports ends
 		-- Do not modify the ports beyond this line
@@ -362,7 +363,8 @@ begin
             reg_data_out(31 downto 24) <= (others => '0');
 	      when b"01" =>
             reg_data_out(11 downto 0) <= i_data_echantillon_1;
-            reg_data_out(31 downto 12) <= (others => '0');
+            reg_data_out(23 downto 12) <= i_data_moy_0;
+            reg_data_out(31 downto 24) <= (others => '0');
 	      when b"10" =>
 	        reg_data_out <= slv_reg2;
 	      when b"11" =>

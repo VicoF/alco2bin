@@ -154,6 +154,12 @@ float get_flow() {
 	return (float) AD1_GetSampleRaw1();
 }
 
+float get_moy(){
+	float conversionFactor = ReferenceVoltage / ((1 << AD1_NUM_BITS) - 1);
+	u16 rawSample = (MY_ADCIP_mReadReg(MY_AD1_IP_BASEADDRESS, 0x4)>> 12) & 0xFFF;
+	return voltage_to_alcool((float) rawSample * conversionFactor); //apply a mask to get 9 result bits
+}
+
 int is_reflex_finished(){
 	xil_printf("%u", MY_ADCIP_mReadReg(MY_AD1_IP_BASEADDRESS, 0xC) & 0x001);
 	return MY_ADCIP_mReadReg(MY_AD1_IP_BASEADDRESS, 0xC) & 0x001; //apply a mask to get only bit #1
@@ -171,6 +177,21 @@ char* get_reflex_status(){
 	if (!is_reflex_finished()){
 		return "Pending";
 	}else if (is_reflex_error()){
+		return "Error";
+	}else{
+		return "Success";
+	}
+}
+
+int is_ethylo_error(){
+	xil_printf("Error: %s\n",MY_ADCIP_mReadReg(MY_AD1_IP_BASEADDRESS, 0x0) & 0x1000000? "Error": "Chill");
+	return MY_ADCIP_mReadReg(MY_AD1_IP_BASEADDRESS, 0x0) & 0x1000000;
+}
+
+char* get_ethylo_status(){
+	if (readEthyloEnabled()){
+		return "Pending";
+	}else if (is_ethylo_error()){
 		return "Error";
 	}else{
 		return "Success";

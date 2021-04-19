@@ -59,6 +59,11 @@ proc checkRequiredFiles { origin_dir} {
    "$origin_dir/../vhdSources/Top.vhd" \
    "$origin_dir/../vhdSources/kcpsm6.vhd"\
    "$origin_dir/../vhdSources/myProgram.vhd"\
+   "$origin_dir/../vhdSources/basculeD.vhd"\
+   "$origin_dir/../vhdSources/Reg12bits.vhd"\
+   "$origin_dir/../vhdSources/Moyenneur.vhd"\
+   "$origin_dir/../vhdSources/Mediane.vhd"\
+   "$origin_dir/../vhdSources/reflex.vhd"\
   ]
   foreach ifile $files {
     if { ![file isfile $ifile] } {
@@ -219,6 +224,10 @@ set files [list \
  [file normalize "${origin_dir}/../vhdSources/compteur_nbits.vhd"] \
  [file normalize "${origin_dir}/../vhdSources/kcpsm6.vhd"] \
  [file normalize "${origin_dir}/../vhdSources/myProgram.vhd"] \
+ [file normalize "${origin_dir}/../vhdSources/basculeD.vhd"] \
+ [file normalize "${origin_dir}/../vhdSources/Reg12bits.vhd"] \
+ [file normalize "${origin_dir}/../vhdSources/Moyenneur.vhd"] \
+ [file normalize "${origin_dir}/../vhdSources/Mediane.vhd"] \
  [file normalize "${origin_dir}/../vhdSources/reflex.vhd"] \
 ]
 # ==>Ne pas créer de copies locales des fichiers sources dans le projet Vivado et garder une seule et unique version
@@ -273,6 +282,26 @@ set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
 set file "$origin_dir/../vhdSources/myProgram.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/../vhdSources/basculeD.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/../vhdSources/Reg12bits.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/../vhdSources/Moyenneur.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/../vhdSources/Mediane.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
