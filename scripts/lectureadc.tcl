@@ -50,6 +50,7 @@ proc checkRequiredFiles { origin_dir} {
    "$origin_dir/../vhdSources/compteur_nbits.vhd" \
    "$origin_dir/../constraints/Atelier3_Constraintes.xdc" \
    "$origin_dir/../vhdsim/top_tb.vhd" \
+   "$origin_dir/../vhdsim/reflex_tb.vhd" \
    "$origin_dir/../vhdsim/testfct2_3.vhd" \
    "$origin_dir/../vhdSources/AD7476_mef.vhd" \
    "$origin_dir/../vhdSources/Ctrl_AD1.vhd" \
@@ -62,6 +63,7 @@ proc checkRequiredFiles { origin_dir} {
    "$origin_dir/../vhdSources/Reg12bits.vhd"\
    "$origin_dir/../vhdSources/Moyenneur.vhd"\
    "$origin_dir/../vhdSources/Mediane.vhd"\
+   "$origin_dir/../vhdSources/reflex.vhd"\
   ]
   foreach ifile $files {
     if { ![file isfile $ifile] } {
@@ -226,7 +228,7 @@ set files [list \
  [file normalize "${origin_dir}/../vhdSources/Reg12bits.vhd"] \
  [file normalize "${origin_dir}/../vhdSources/Moyenneur.vhd"] \
  [file normalize "${origin_dir}/../vhdSources/Mediane.vhd"] \
-
+ [file normalize "${origin_dir}/../vhdSources/reflex.vhd"] \
 ]
 # ==>Ne pas créer de copies locales des fichiers sources dans le projet Vivado et garder une seule et unique version
 
@@ -304,6 +306,11 @@ set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
 
+set file "$origin_dir/../vhdSources/reflex.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
 # Set 'sources_1' fileset properties
 set obj [get_filesets sources_1]
 set_property -name "top" -value "Top" -objects $obj
@@ -337,6 +344,7 @@ set obj [get_filesets sim_1]
 # Import local files from the original project
 set files [list \
  [file normalize "${origin_dir}/../vhdsim/top_tb.vhd" ]\
+ [file normalize "${origin_dir}/../vhdsim/reflex_tb.vhd" ]\
  [file normalize "${origin_dir}/../vhdsim/testfct2_3.vhd" ]\
 ]
 set imported_files [import_files -fileset sim_1 $files]
@@ -345,9 +353,9 @@ set imported_files [import_files -fileset sim_1 $files]
 # None
 
 # Set 'sim_1' fileset file properties for local files
-set file "[file normalize ${origin_dir}/../vhdsim/top_tb.vhd]"
+set file "[file normalize ${origin_dir}/../vhdsim/reflex_tb.vhd]"
 set file_added [add_files -norecurse -fileset $obj [list $file]]
-set file "${origin_dir}/../vhdsim/top_tb.vhd"
+set file "${origin_dir}/../vhdsim/reflex_tb.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sim_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
@@ -356,7 +364,7 @@ set_property -name "file_type" -value "VHDL" -objects $file_obj
 # Set 'sim_1' fileset properties
 set obj [get_filesets sim_1]
 set_property -name "hbs.configure_design_for_hier_access" -value "1" -objects $obj
-set_property -name "top" -value "top_tb" -objects $obj
+set_property -name "top" -value "reflex_tb" -objects $obj
 set_property -name "top_auto_set" -value "0" -objects $obj
 set_property -name "top_lib" -value "xil_defaultlib" -objects $obj
 

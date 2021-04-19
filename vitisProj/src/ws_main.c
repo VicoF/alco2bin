@@ -215,6 +215,7 @@ int main()
 {
 //	time_t t;
 	//srand((unsigned) time(&t));
+	initialize_oled();
 	sys_thread_new("main_thread", (void(*)(void*))main_thread, 0,
 			MAIN_THREAD_STACKSIZE, DEFAULT_THREAD_PRIO);
 

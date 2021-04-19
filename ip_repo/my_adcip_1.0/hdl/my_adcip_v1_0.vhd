@@ -19,6 +19,7 @@ entity my_adcip_v1_0 is
         i_data_echantillon_1 : in std_logic_vector(11 downto 0);
         i_data_echantillon_0 : in std_logic_vector(11 downto 0);
         i_data_maxPico : in std_logic_vector ( 11 downto 0);
+        i_data_reflex : in std_logic_vector ( 9 downto 0);
         o_data_out : out std_logic_vector(31 downto 0);
 		-- User ports ends
 		-- Do not modify the ports beyond this line
@@ -61,6 +62,7 @@ architecture arch_imp of my_adcip_v1_0 is
 		i_data_echantillon_1 : in std_logic_vector(11 downto 0);
         i_data_echantillon_0 : in std_logic_vector(11 downto 0);
         i_data_maxPico : in std_logic_vector ( 11 downto 0);
+        i_data_reflex : in std_logic_vector ( 9 downto 0);
         o_data_out : out std_logic_vector(31 downto 0);
 		S_AXI_ACLK	: in std_logic;
 		S_AXI_ARESETN	: in std_logic;
@@ -98,6 +100,7 @@ my_adcip_v1_0_S00_AXI_inst : my_adcip_v1_0_S00_AXI
         i_data_echantillon_1 => i_data_echantillon_1,
         i_data_echantillon_0 => i_data_echantillon_0,
         i_data_maxPico => i_data_maxPico,
+        i_data_reflex => i_data_reflex,
         o_data_out => o_data_out,
 		S_AXI_ACLK	=> s00_axi_aclk,
 		S_AXI_ARESETN	=> s00_axi_aresetn,
