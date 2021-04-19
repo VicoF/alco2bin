@@ -39,6 +39,7 @@ entity reflex is
            o_data : out STD_LOGIC_VECTOR(8 downto 0);
            o_green: out std_logic;
            o_red: out std_logic;
+           o_blue: out std_logic;
            i_btn: in STD_LOGIC);
 end reflex;
 
@@ -65,7 +66,7 @@ type tableau is array (integer range 0 to 8) of std_logic_vector(8 downto 0);
 constant delay_tab : tableau := (
 '0'& x"AF",
 '0'& x"FF",
-'1'& x"FF",
+'1'& x"F1",
 '1'& x"DF",
 '1'& x"0A",
 '1'& x"CD",
@@ -143,7 +144,7 @@ end process;
 
 with curr_state select d_en_cpt <= '1' WHEN WAIT_DELAY|TIMER, '0' when others;
 with curr_state select d_reset_cpt <= '1' WHEN RESET_CPT1|RESET_CPT2|SEND_ERROR, '0' when others;
-with curr_state select o_data <= d_val_cpt WHEN SEND_RESULT |IDLE, "000000000" when others;
+with curr_state select o_data <= d_val_cpt WHEN SEND_RESULT |IDLE | TIMER, "000000000" when others;
 with curr_state select o_strobe_end <= '1' WHEN SEND_RESULT|SEND_ERROR, '0' when others;
 with curr_state select d_next_delay <= '1' WHEN IDLE, '0' when others;
 with curr_state select o_red <= '0' WHEN TIMER, '1' when others;

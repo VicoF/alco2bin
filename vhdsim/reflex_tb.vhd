@@ -128,9 +128,12 @@ begin
             
         WAIT for sim_sys_clk_period; 
         d_do_reflex_test <= '1';
-        WAIT for second*1; 
+        WAIT for sim_sys_clk_period; 
         d_do_reflex_test <= '0';
+        WAIT for 12 sec; 
         i_btn <= '1';
+         WAIT for sim_sys_clk_period*4; 
+         i_btn <= '0';
          WAIT for sim_sys_clk_period*10; 
          d_do_reflex_test <= '1';
         WAIT;

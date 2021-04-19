@@ -197,6 +197,7 @@ architecture Behavioral of Top is
            o_data : out STD_LOGIC_VECTOR(8 downto 0);
             o_green: out std_logic;
            o_red: out std_logic;
+           o_blue: out std_logic;
            i_btn: in STD_LOGIC);
 end component;
     
@@ -263,8 +264,8 @@ begin
                     strobe_start_reflex<= '1';
                     reflex_test_done<='0';
                 elsif(strobe_stop_reflex='1') then
-        reflex_test_done<='1';
-        strobe_start_reflex <= '0';
+                    reflex_test_done<='1';
+                    strobe_start_reflex <= '0';
                 else strobe_start_reflex <= '0';
                 end if;
            last_d_do_reflex_test<=d_do_reflex_test;
@@ -430,6 +431,7 @@ i_data_reflex => d_data_reflex
            o_strobe_end => strobe_stop_reflex,
             o_green=>o_led6_g,
            o_red=>o_led6_r,
+           o_blue => o_ledtemoin_b,
            i_btn => i_btn(1)
            );
 
