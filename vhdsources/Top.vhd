@@ -304,15 +304,14 @@ begin
             end if;
             
         end process;
+        
         ethylo_process: process(bonne_valeur_flow )
           begin
              if bonne_valeur_flow = '0' then
-             read_strobe <= '0';
-             
+             read_strobe <= '0';            
              else
              read_strobe <= '1';
-             
-            end if;
+             end if;
     end process;
 
 flow_test : flow

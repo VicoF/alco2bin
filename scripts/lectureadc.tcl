@@ -61,6 +61,7 @@ proc checkRequiredFiles { origin_dir} {
    "$origin_dir/../vhdSources/flow.vhd" \
    "$origin_dir/../vhdSources/kcpsm6.vhd"\
    "$origin_dir/../vhdSources/myProgram.vhd"\
+   "$origin_dir/../vhdSources/reflex.vhd"\
   ]
   foreach ifile $files {
     if { ![file isfile $ifile] } {
