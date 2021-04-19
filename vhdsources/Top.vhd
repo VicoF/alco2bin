@@ -1,5 +1,5 @@
 ----------------------------------------------------------------------------------
--- Exercice1 Atelier #3 S4 Génie informatique - H21
+-- Exercice1 Atelier #3 S4 Gï¿½nie informatique - H21
 -- Larissa Njejimana
 -- v.3 
 ----------------------------------------------------------------------------------
@@ -68,15 +68,15 @@ architecture Behavioral of Top is
     port ( 
         reset                       : in    std_logic;  
         
-        clk_ADC                     : in    std_logic;                      -- Horloge fourni à l'ADC
-        i_DO                        : in    std_logic;                      -- Bit de donnée en provenance de l'ADC           
-        i_D1                        : in    std_logic;                      -- Bit de donnée en provenance de l'ADC           
+        clk_ADC                     : in    std_logic;                      -- Horloge fourni ï¿½ l'ADC
+        i_DO                        : in    std_logic;                      -- Bit de donnï¿½e en provenance de l'ADC           
+        i_D1                        : in    std_logic;                      -- Bit de donnï¿½e en provenance de l'ADC           
         o_ADC_nCS                   : out   std_logic;                      -- Signal Chip select vers l'ADC 
         
-        i_ADC_Strobe                : in    std_logic;                      -- synchronisation: déclencheur de la séquence d'échantillonnage  
-        o_echantillon_pret_strobe   : out   std_logic;                      -- strobe indicateur d'une réception complète d'un échantillon  
-        o_echantillon_0               : out   std_logic_vector (11 downto 0);  -- valeur de l'échantillon reçu
-        o_echantillon_1               : out   std_logic_vector (11 downto 0)  -- valeur de l'échantillon reçu
+        i_ADC_Strobe                : in    std_logic;                      -- synchronisation: dï¿½clencheur de la sï¿½quence d'ï¿½chantillonnage  
+        o_echantillon_pret_strobe   : out   std_logic;                      -- strobe indicateur d'une rï¿½ception complï¿½te d'un ï¿½chantillon  
+        o_echantillon_0               : out   std_logic_vector (11 downto 0);  -- valeur de l'ï¿½chantillon reï¿½u
+        o_echantillon_1               : out   std_logic_vector (11 downto 0)  -- valeur de l'ï¿½chantillon reï¿½u
     );
     end  component;
     
@@ -94,7 +94,7 @@ architecture Behavioral of Top is
     component Synchro_Horloges is
     generic (const_CLK_syst_MHz: integer := freq_sys_MHz);
     Port ( 
-        clkm        : in  std_logic;  -- Entrée  horloge maitre   (50 MHz soit 20 ns ou 100 MHz soit 10 ns)
+        clkm        : in  std_logic;  -- Entrï¿½e  horloge maitre   (50 MHz soit 20 ns ou 100 MHz soit 10 ns)
         o_S_5MHz    : out std_logic;  -- source horloge divisee          (clkm MHz / (2*constante_diviseur_p +2) devrait donner 5 MHz soit 200 ns)
         o_CLK_5MHz  : out std_logic;
         o_S_100Hz   : out  std_logic; -- source horloge 100 Hz : out  std_logic;   -- (100  Hz approx:  99,952 Hz) 
@@ -184,11 +184,25 @@ architecture Behavioral of Top is
     i_sw_tri_i : in STD_LOGIC_VECTOR ( 3 downto 0 );
     o_data_out_0 : out STD_LOGIC_VECTOR ( 31 downto 0 );
     o_leds_tri_o : out STD_LOGIC_VECTOR ( 3 downto 0 );
-    i_data_maxPico_0 : in std_logic_vector(11 downto 0)
+    i_data_maxPico_0 : in std_logic_vector(11 downto 0);
+    i_data_reflex : in std_logic_vector(9 downto 0)
   );
   end component;
+  
+  component reflex is
+    Port ( i_clk : in STD_LOGIC;
+            i_cpt_clk : in STD_LOGIC;
+           i_strobe_start : in STD_LOGIC;
+           o_strobe_end : out STD_LOGIC;
+           o_data : out STD_LOGIC_VECTOR(8 downto 0);
+            o_green: out std_logic;
+           o_red: out std_logic;
+           o_blue: out std_logic;
+           i_btn: in STD_LOGIC);
+end component;
     
     signal clk_5MHz                     : std_logic;
+    signal clk_100Hz                     : std_logic;
     signal d_S_5MHz                     : std_logic;
     signal d_strobe_100Hz               : std_logic := '0';  -- cadence echantillonnage AD1
     
@@ -202,8 +216,16 @@ architecture Behavioral of Top is
     signal d_adc_echantillon_0                : std_logic_vector (11 downto 0); 
     signal d_adc_echantillon_1                : std_logic_vector (11 downto 0); 
     signal d_data_maxpico            : std_logic_vector (11 downto 0); 
+    signal d_data_reflex            : std_logic_vector (9 downto 0); 
     signal d_data              : std_logic_vector (31 downto 0); 
+    signal d_reflex_cs              : std_logic_vector (8 downto 0); 
     signal d_do_ethylo_test              : std_logic; 
+    signal strobe_start_reflex              : std_logic; 
+    signal strobe_stop_reflex              : std_logic; 
+    signal d_do_reflex_test              : std_logic; 
+    signal d_stop_reflex_test              : std_logic:='0'; 
+    signal last_d_do_reflex_test              : std_logic; 
+    signal reflex_test_done              : std_logic:='0'; 
     signal S_5MHz : STD_LOGIC;
     
     signal         address : std_logic_vector(11 downto 0);
@@ -264,6 +286,21 @@ begin
     end if;
     end process;
      
+     reflex_process: process(sys_clock, d_do_reflex_test, last_d_do_reflex_test,strobe_stop_reflex )
+        begin
+            if(sys_clock'event and sys_clock ='1') then
+                if(d_do_reflex_test='1' and last_d_do_reflex_test ='0') then
+                    strobe_start_reflex<= '1';
+                    reflex_test_done<='0';
+                elsif(strobe_stop_reflex='1') then
+                    reflex_test_done<='1';
+                    strobe_start_reflex <= '0';
+                else strobe_start_reflex <= '0';
+                end if;
+           last_d_do_reflex_test<=d_do_reflex_test;
+            end if;
+            
+        end process;
       processor: kcpsm6
     generic map (                 
         hwbuild => X"00", 
@@ -320,14 +357,14 @@ begin
         reset                       => reset_adc,
         
         clk_ADC                     => clk_5MHz,                    -- pour horloge externe de l'ADC 
-        i_DO                        => i_ADC_D0,               -- bit de données provenant de l'ADC (via um mux)       
-        i_D1                        => i_ADC_D1,               -- bit de données provenant de l'ADC (via um mux)       
+        i_DO                        => i_ADC_D0,               -- bit de donnï¿½es provenant de l'ADC (via um mux)       
+        i_D1                        => i_ADC_D1,               -- bit de donnï¿½es provenant de l'ADC (via um mux)       
         o_ADC_nCS                   => o_ADC_NCS,                   -- chip select pour le convertisseur (ADC )
         
-        i_ADC_Strobe                => d_strobe_100Hz,              -- synchronisation: déclencheur de la séquence d'échantillonnage 
-        o_echantillon_pret_strobe   => o_echantillon_pret_strobe,   -- strobe indicateur d'une réception complète d'un échantillon 
-        o_echantillon_0               => d_adc_echantillon_0,                -- valeur de l'échantillon reçu (12 bits)
-        o_echantillon_1               => d_adc_echantillon_1                -- valeur de l'échantillon reçu (12 bits)
+        i_ADC_Strobe                => d_strobe_100Hz,              -- synchronisation: dï¿½clencheur de la sï¿½quence d'ï¿½chantillonnage 
+        o_echantillon_pret_strobe   => o_echantillon_pret_strobe,   -- strobe indicateur d'une rï¿½ception complï¿½te d'un ï¿½chantillon 
+        o_echantillon_0               => d_adc_echantillon_0,                -- valeur de l'ï¿½chantillon reï¿½u (12 bits)
+        o_echantillon_1               => d_adc_echantillon_1                -- valeur de l'ï¿½chantillon reï¿½u (12 bits)
     );
     
     --update echantillon signal only when it is ready
@@ -356,7 +393,7 @@ begin
            clkm         =>  sys_clock,
            o_S_5MHz     =>  S_5MHz,
            o_CLK_5MHz   => clk_5MHz,
-           o_S_100Hz    => open,
+           o_S_100Hz    => clk_100Hz,
            o_stb_100Hz  => d_strobe_100Hz,
            --o_S_1Hz      => o_ledtemoin_b
            o_S_1Hz      => open
@@ -407,13 +444,34 @@ i_data_echantillon_1 => d_echantillon_1,
 i_data_echantillon_0 => d_echantillon_0,
 i_sw_tri_i => i_sw,
 o_data_out_0 => d_data,
-o_leds_tri_o => o_leds,
-i_data_maxPico_0 => d_data_maxPico
+o_leds_tri_o => open,
+i_data_maxPico_0 => d_data_maxPico,
+i_data_reflex => d_data_reflex
 --o_leds_tri_o => open
 ); 
+
+
+
+  test_reflex:  reflex
+    Port map ( i_clk => sys_clock,
+            i_cpt_clk => clk_100Hz,
+           i_strobe_start => strobe_start_reflex,
+           o_data => d_reflex_cs,
+           o_strobe_end => strobe_stop_reflex,
+            o_green=>o_led6_g,
+           o_red=>o_led6_r,
+           o_blue => o_ledtemoin_b,
+           i_btn => i_btn(1)
+           );
+
+
+o_leds(1)<= i_btn(1);
 d_do_ethylo_test <= d_data(0);    
-o_led6_r <= not d_do_ethylo_test;
-o_led6_g <= d_do_ethylo_test;
+d_do_reflex_test <= d_data(1);    
+d_data_reflex <= d_reflex_cs & reflex_test_done;
+--o_led6_r <= not d_do_ethylo_test or strobe_stop_reflex;
+--o_led6_g <= d_do_ethylo_test;
+--o_ledtemoin_b <= d_do_reflex_test and not strobe_stop_reflex;
 reset_adc <= reset or not d_do_ethylo_test;
 --o_leds(0) <= d_data(0);    
 end Behavioral;

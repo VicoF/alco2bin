@@ -266,7 +266,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>b1210483</spirit:value>
+            <spirit:value>f00acc1a</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -282,7 +282,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>b1210483</spirit:value>
+            <spirit:value>f00acc1a</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -370,6 +370,23 @@
           <spirit:direction>in</spirit:direction>
           <spirit:vector>
             <spirit:left spirit:format="long">11</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>i_data_reflex</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long">9</spirit:left>
             <spirit:right spirit:format="long">0</spirit:right>
           </spirit:vector>
           <spirit:wireTypeDefs>
@@ -749,7 +766,7 @@
       <spirit:file>
         <spirit:name>hdl/my_adcip_v1_0.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_dcefc2bd</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_8ecb1db4</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -878,8 +895,8 @@
         <xilinx:taxonomy>AXI_Peripheral</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>my_adcip_v1.0</xilinx:displayName>
-      <xilinx:coreRevision>11</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2021-03-25T16:20:05Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>18</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2021-04-19T01:05:47Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="ui.data.coregen.dd@4222694e_ARCHIVE_LOCATION">d:/julie/Documents/S4/Projet/ip_repo/my_adcip_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.dd@1d4a5947_ARCHIVE_LOCATION">d:/julie/Documents/S4/Projet/ip_repo/my_adcip_1.0</xilinx:tag>
@@ -1000,14 +1017,80 @@
         <xilinx:tag xilinx:name="ui.data.coregen.dd@6c1f37b8_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.dd@6246c468_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.dd@292c1aa3_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@27f55cc8_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6402d3d1_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1676dcea_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@5407ef5f_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1704af77_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@51dc80c1_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@62d20c93_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3fc9f479_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@ebbf2c_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@79ecca9d_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@11edb85c_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@649277d4_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@9301bd9_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4a29a2a_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6f4a023d_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1a48c553_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@795a6758_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@78006470_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@327fe121_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2f107318_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@39fa293a_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7135b605_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3fd0cb6_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@fb08b94_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@540d0c0_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@229fc665_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1c8dea9b_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@36fd6a31_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3ed62323_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3af41cf0_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7221e516_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7859f308_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7e1c0b9b_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1c9fcebd_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@12bdbd95_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3969c3de_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@23ac2607_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@60a83a16_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@341612e8_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@43c5d808_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@6d92a3c8_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1677df3_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@343ba8c3_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@1edab5f8_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@523f08c9_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@cd6219b_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7d27e3e8_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7e05d9a_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@414958f6_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3b3b79fe_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@59344fa6_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4a25c5d7_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@30d052e0_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7d0a2a1_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@4ae9fc28_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@865051c_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@3d2933fa_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@84100d5_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@37508e78_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@53d75839_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@7c1da862_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@c6207c3_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@60a4e4c1_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@2e470e19_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@26fde21b_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.dd@56657406_ARCHIVE_LOCATION">c:/Users/julie/Documents/UNIVERSITE/S4/projet/repos/ip_repo/my_adcip_1.0</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2020.2</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="7a63f3fc"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="ed1368d5"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="240a47c1"/>
-      <xilinx:checksum xilinx:scope="ports" xilinx:value="73b00839"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="05ce2281"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="374edff4"/>
       <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="6992ea72"/>
       <xilinx:checksum xilinx:scope="parameters" xilinx:value="6363c03c"/>
     </xilinx:packagingInfo>

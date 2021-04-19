@@ -33,6 +33,7 @@
 #include "PmodOLED.h"
 #include "webserver.h"
 #include "xil_printf.h"
+#include "display_main.h"
 
 // Ajout pour S4i GIF402
 #include "s4i_tools.h"
@@ -94,9 +95,16 @@ int do_404(int sd, char *req, int rlen) {
 
 	return 0;
 }
+
+
 //Thread to stop ethylo test automatically after 10 seconds
 int ethylo_thread() {
-	sys_msleep(10000);
+	int i = 0;
+	while (i < 20) {
+		draw_ethylo_flow();
+		sys_msleep(485);
+		i++;
+	}
 	setEthyloEnabled(0);
 	vTaskDelete(NULL);
 	return 0;
@@ -133,47 +141,53 @@ int do_http_post(int sd, char *req, int rlen) {
 		char *data = strstr(req, "\r\n\r\n") + 4;
 		//find the test key
 		char *test = strstr(data, "\"test\"");
-		if (test== NULL) {
+		if (test == NULL) {
 			xil_printf("http POST start_test: missing test type\r\n");
 			return -1;
 		}
 		//isolate the value between the two quotes ""
-		char *starttype = strstr(test+6, "\"")+1;
-		char *endtype = strstr(starttype, "\"")-1;
+		char *starttype = strstr(test + 6, "\"") + 1;
+		char *endtype = strstr(starttype, "\"") - 1;
 		char type[10];
-		int i =0;
-		while(starttype<=endtype){
+		int i = 0;
+		while (starttype <= endtype) {
 			type[i] = *starttype;
 			starttype++;
 			i++;
 		}
 		type[i] = '\0';
 		//check if it correspond to ethylo
-		if(strcmp(type, "ethylo")==0){
-			if(readEthyloEnabled()){
-				char response[] = "{ \"status\": \"error\",\n\"message\":\"Test deja en cours\"}";
-					len = generate_http_header(buf, "jsn", strlen(response));
-					strcpy(buf+len, response);
-					len+= strlen(response);
-			}else{
+		if (strcmp(type, "ethylo") == 0) {
+			if (readEthyloEnabled()) {
+				char response[] =
+						"{ \"status\": \"error\",\n\"message\":\"Test deja en cours\"}";
+				len = generate_http_header(buf, "jsn", strlen(response));
+				strcpy(buf + len, response);
+				len += strlen(response);
+			} else {
 				setEthyloEnabled(1);
-				sys_thread_new("ethylo_test_thread", ethylo_thread, NULL,
-							64, DEFAULT_THREAD_PRIO);
+				sys_thread_new("ethylo_test_thread", ethylo_thread, NULL, 1024,
+				DEFAULT_THREAD_PRIO);
 				char response[] = "{ \"status\": \"success\"}";
 				len = generate_http_header(buf, "jsn", strlen(response));
-				strcpy(buf+len, response);
-				len+= strlen(response);
+				strcpy(buf + len, response);
+				len += strlen(response);
 			}
 
-		}else if (0){
-		//eventualy add more check here
+		} else if (strcmp(type, "reflex") == 0) {
+			startReflexTest();
+			char response[] = "{ \"status\": \"success\"}";
+							len = generate_http_header(buf, "jsn", strlen(response));
+							strcpy(buf + len, response);
+							len += strlen(response);
 		}
 		//type not found, returning an error
 		else {
-			xil_printf("http POST start_test: unrecognized test type \"%s\"\r\n", type);
+			xil_printf(
+					"http POST start_test: unrecognized test type \"%s\"\r\n",
+					type);
 			return -1;
 		}
-
 
 	} else {
 		xil_printf("http POST: unsupported command\r\n");
@@ -253,11 +267,13 @@ int do_http_get(int sd, char *req, int rlen) {
 		float alcool = voltage_to_alcool(volt_alcool);
 		float volt_max_alcool = AD1_GetMaxAlcoolVoltage();
 		float maxAlcool = voltage_to_alcool(volt_max_alcool);
-		xil_printf("maxAlcool voltage: %.1f\n macAlcool: %.3f\n", volt_max_alcool, maxAlcool);
+		xil_printf("maxAlcool voltage: %.1f\n macAlcool: %.3f\n",
+				volt_max_alcool, maxAlcool);
 
 		char* ethy_buf[50];
-		sprintf(ethy_buf, "{\n\"flow\": %.2f,\n\"alcool\": %.2f,\n\"maxAlcool\":%.2f}", flow,
-				alcool, maxAlcool);
+		sprintf(ethy_buf,
+				"{\n\"flow\": %.2f,\n\"alcool\": %.2f,\n\"maxAlcool\":%.2f}",
+				flow, alcool, maxAlcool);
 		unsigned int ethy_len = strlen(ethy_buf);
 		unsigned int len = generate_http_header(buf, "js", ethy_len);
 		strcat(buf, ethy_buf);
@@ -273,7 +289,7 @@ int do_http_get(int sd, char *req, int rlen) {
 		PmodOLED oledDevice;
 		// Initialiser le Pmod Oled
 		OLED_Begin(&oledDevice, XPAR_PMODOLED_0_AXI_LITE_GPIO_BASEADDR,
-				XPAR_PMODOLED_0_AXI_LITE_SPI_BASEADDR, 0, 0);
+		XPAR_PMODOLED_0_AXI_LITE_SPI_BASEADDR, 0, 0);
 		// Désactiver la mise à jour automatique de l'écran de l'OLED
 		OLED_SetCharUpdate(&oledDevice, 0);
 		// Préparer l'écran pour afficher l'état des boutons et des switch
@@ -289,6 +305,25 @@ int do_http_get(int sd, char *req, int rlen) {
 		OLED_SetCursor(&oledDevice, 13, 3);
 		OLED_PutString(&oledDevice, "g/L");
 		OLED_Update(&oledDevice);
+	}else if(s4i_is_cmd_reflex(req)){
+		xil_printf("!!! HTTP GET: cmd/reflex\r\n");
+		xil_printf("result: %u\n",get_reflex_result());
+
+		char* reflex_buf[50];
+				sprintf(reflex_buf,
+						"{\n\"success\": \"%s\",\n\"result\": %u}",
+						get_reflex_status(), get_reflex_result());
+				unsigned int reflex_len = strlen(reflex_buf);
+				unsigned int len = generate_http_header(buf, "js", reflex_len);
+				strcat(buf, reflex_buf);
+				len += reflex_len;
+
+				// Ã‰criture sur le socket.
+				if (lwip_write(sd, buf, len) != len) {
+					xil_printf("Error writing GET response to socket\r\n");
+					xil_printf("http header = %s\r\n", buf);
+					return -1;
+				}
 	}
 
 	else {

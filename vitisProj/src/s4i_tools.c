@@ -51,6 +51,17 @@ int s4i_is_cmd_ethylo(char *buf) {
 	return (!strncmp(buf, "cmd", 3) && !strncmp(buf + 4, "ethylo", 6));
 }
 
+int s4i_is_cmd_reflex(char *buf){
+	// TODO: VÅ½rifier si la chaâ€�ne donnÅ½e correspond Ë† "cmd/reflex".
+		// Retourner 0 si ce nest pas le cas.
+
+		/* skip past GET / */
+		buf += 5;
+
+		/* then check for cmd/ethylo */
+		return (!strncmp(buf, "cmd", 3) && !strncmp(buf + 4, "reflex", 6));
+}
+
 unsigned int s4i_get_sws_state() {
 	// Retourne lÅ½tat des 4 interrupteurs dans un entier (un bit par
 	// interrupteur).
@@ -94,6 +105,17 @@ int readEthyloEnabled() {
 
 }
 
+void startReflexTest() {
+	MY_ADCIP_mWriteReg(MY_AD1_IP_BASEADDRESS, 0x8, 2); //second bit is for reflex test, first one is for ethylo
+	MY_ADCIP_mWriteReg(MY_AD1_IP_BASEADDRESS, 0x8, 00); //strobe
+
+}
+
+int readReflexTestEnabled() {
+	return MY_ADCIP_mReadReg(MY_AD1_IP_BASEADDRESS, 0x8) & 0x002; //apply a mask to get only bit #2
+
+}
+
 float AD1_GetSampleVoltage() {
 	float conversionFactor = ReferenceVoltage / ((1 << AD1_NUM_BITS) - 1);
 
@@ -130,5 +152,28 @@ float voltage_to_alcool(float voltage) {
 float get_flow() {
 //return flow*1000/3.3;
 	return (float) AD1_GetSampleRaw1();
+}
+
+int is_reflex_finished(){
+	xil_printf("%u", MY_ADCIP_mReadReg(MY_AD1_IP_BASEADDRESS, 0xC) & 0x001);
+	return MY_ADCIP_mReadReg(MY_AD1_IP_BASEADDRESS, 0xC) & 0x001; //apply a mask to get only bit #1
+}
+
+int get_reflex_result(){
+	return (int)((MY_ADCIP_mReadReg(MY_AD1_IP_BASEADDRESS, 0xC) & 0x3FE)/2*10); //apply a mask to get 9 result bits
+}
+
+int is_reflex_error(){
+	return is_reflex_finished() && get_reflex_result()==0;
+}
+
+char* get_reflex_status(){
+	if (!is_reflex_finished()){
+		return "Pending";
+	}else if (is_reflex_error()){
+		return "Error";
+	}else{
+		return "Success";
+	}
 }
 
