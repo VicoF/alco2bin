@@ -52,11 +52,13 @@ proc checkRequiredFiles { origin_dir} {
    "$origin_dir/../vhdsim/top_tb.vhd" \
    "$origin_dir/../vhdsim/reflex_tb.vhd" \
    "$origin_dir/../vhdsim/testfct2_3.vhd" \
+   "$origin_dir/../vhdsim/flow_tb.vhd" \
    "$origin_dir/../vhdSources/AD7476_mef.vhd" \
    "$origin_dir/../vhdSources/Ctrl_AD1.vhd" \
    "$origin_dir/../vhdSources/Synchro_Horloges.vhd" \
    "$origin_dir/../vhdSources/reg_dec_24b.vhd" \
    "$origin_dir/../vhdSources/Top.vhd" \
+   "$origin_dir/../vhdSources/flow.vhd" \
    "$origin_dir/../vhdSources/kcpsm6.vhd"\
    "$origin_dir/../vhdSources/myProgram.vhd"\
   ]
@@ -220,6 +222,8 @@ set files [list \
  [file normalize "${origin_dir}/../vhdSources/kcpsm6.vhd"] \
  [file normalize "${origin_dir}/../vhdSources/myProgram.vhd"] \
  [file normalize "${origin_dir}/../vhdSources/reflex.vhd"] \
+ [file normalize "${origin_dir}/../vhdSources/flow.vhd"] \
+ 
 ]
 # ==>Ne pas créer de copies locales des fichiers sources dans le projet Vivado et garder une seule et unique version
 
@@ -228,6 +232,11 @@ add_files -norecurse -fileset $obj $files
 
 # Set 'sources_1' fileset file properties for remote files
 set file "$origin_dir/../vhdSources/AD7476_mef.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "$origin_dir/../vhdSources/flow.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sources_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
@@ -317,6 +326,7 @@ set files [list \
  [file normalize "${origin_dir}/../vhdsim/top_tb.vhd" ]\
  [file normalize "${origin_dir}/../vhdsim/reflex_tb.vhd" ]\
  [file normalize "${origin_dir}/../vhdsim/testfct2_3.vhd" ]\
+ [file normalize "${origin_dir}/../vhdsim/flow_tb.vhd" ]\
 ]
 set imported_files [import_files -fileset sim_1 $files]
 
@@ -327,6 +337,13 @@ set imported_files [import_files -fileset sim_1 $files]
 set file "[file normalize ${origin_dir}/../vhdsim/reflex_tb.vhd]"
 set file_added [add_files -norecurse -fileset $obj [list $file]]
 set file "${origin_dir}/../vhdsim/reflex_tb.vhd"
+set file [file normalize $file]
+set file_obj [get_files -of_objects [get_filesets sim_1] [list "*$file"]]
+set_property -name "file_type" -value "VHDL" -objects $file_obj
+
+set file "[file normalize ${origin_dir}/../vhdsim/flow_tb.vhd]"
+set file_added [add_files -norecurse -fileset $obj [list $file]]
+set file "${origin_dir}/../vhdsim/flow_tb.vhd"
 set file [file normalize $file]
 set file_obj [get_files -of_objects [get_filesets sim_1] [list "*$file"]]
 set_property -name "file_type" -value "VHDL" -objects $file_obj
