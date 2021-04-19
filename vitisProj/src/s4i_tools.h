@@ -28,5 +28,7 @@ int is_reflex_finished();
 int get_reflex_result();
 int is_reflex_error();
 char* get_reflex_status();
+int is_ethylo_error();
+char* get_ethylo_status();
 
 #endif /* SRC_S4I_TOOLS_H_ */

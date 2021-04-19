@@ -185,7 +185,8 @@ architecture Behavioral of Top is
     o_data_out_0 : out STD_LOGIC_VECTOR ( 31 downto 0 );
     o_leds_tri_o : out STD_LOGIC_VECTOR ( 3 downto 0 );
     i_data_maxPico_0 : in std_logic_vector(11 downto 0);
-    i_data_reflex : in std_logic_vector(9 downto 0)
+    i_data_reflex : in std_logic_vector(9 downto 0);
+    i_erreur_flow : in std_logic
   );
   end component;
   
@@ -260,16 +261,7 @@ begin
             d_ADC_Dselect <= i_ADC_D1;
           end if;
      end process;
-     
-     read_pico: process(bonne_valeur_flow)
-     begin
-     if bonne_valeur_flow = '1' then
-     read_strobe <= '0';
-     compteur_flow <= compteur_flow + 1;
-     else
-     read_strobe <= '1';
-     end if;
-     end process;
+    
     
     check_result : process(compteur_flow)
     begin
@@ -282,10 +274,10 @@ begin
     bonne_valeur : process(d_adc_echantillon_1)
     begin
     -- Min max flow
-    if d_adc_echantillon_1 > "011001100011" and d_adc_echantillon_1 < "100110011001" then
-    bonne_valeur_flow <= '0';
-    else
+    if d_adc_echantillon_1 > "000110010000" and d_adc_echantillon_1 < "001001011000" then
     bonne_valeur_flow <= '1';
+    else
+    bonne_valeur_flow <= '0';
     end if;
     end process;
      
@@ -304,12 +296,20 @@ begin
             end if;
             
         end process;
-        ethylo_process: process(sys_clock, d_do_ethylo_test, last_d_do_ethylo_test )
+        ethylo_process: process(sys_clock, d_do_ethylo_test, last_d_do_ethylo_test, o_echantillon_pret_strobe, bonne_valeur_flow )
     begin
         if(sys_clock'event and sys_clock ='1') then
             if(d_do_ethylo_test='1' and last_d_do_ethylo_test ='0') then
                 compteur_flow <= (others=>'0');
+            elsif(o_echantillon_pret_strobe='1' ) then
+             if bonne_valeur_flow = '0' then
+             read_strobe <= '0';
+             compteur_flow <= compteur_flow + 1;
+             else
+             read_strobe <= '1';
             end if;
+         else read_strobe <= '0';
+                end if;
        last_d_do_ethylo_test<=d_do_ethylo_test;
         end if;
         
@@ -460,7 +460,8 @@ i_sw_tri_i => i_sw,
 o_data_out_0 => d_data,
 o_leds_tri_o => open,
 i_data_maxPico_0 => d_data_maxPico,
-i_data_reflex => d_data_reflex
+i_data_reflex => d_data_reflex,
+i_erreur_flow => erreur_flow
 --o_leds_tri_o => open
 ); 
 

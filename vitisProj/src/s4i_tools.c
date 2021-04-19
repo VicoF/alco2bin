@@ -177,3 +177,18 @@ char* get_reflex_status(){
 	}
 }
 
+int is_ethylo_error(){
+	xil_printf("Error: %s\n",MY_ADCIP_mReadReg(MY_AD1_IP_BASEADDRESS, 0x0) & 0x1000000? "Error": "Chill");
+	return MY_ADCIP_mReadReg(MY_AD1_IP_BASEADDRESS, 0x0) & 0x1000000;
+}
+
+char* get_ethylo_status(){
+	if (readEthyloEnabled()){
+		return "Pending";
+	}else if (is_ethylo_error()){
+		return "Error";
+	}else{
+		return "Success";
+	}
+}
+
