@@ -250,7 +250,7 @@ begin
     
     check_result : process(sys_clock,compteur_flow)
     begin
-    if compteur_flow > 100000000 then
+    if compteur_flow > "100000000" then
     erreur_flow <= '1';
     end if;
     end process;
