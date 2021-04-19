@@ -185,6 +185,7 @@ architecture Behavioral of Top is
     o_data_out_0 : out STD_LOGIC_VECTOR ( 31 downto 0 );
     o_leds_tri_o : out STD_LOGIC_VECTOR ( 3 downto 0 );
     i_data_maxPico_0 : in std_logic_vector(11 downto 0);
+    i_data_moy_0 : in std_logic_vector ( 11 downto 0);
     i_data_reflex : in std_logic_vector(9 downto 0)
   );
   end component;
@@ -199,6 +200,21 @@ architecture Behavioral of Top is
            o_red: out std_logic;
            o_blue: out std_logic;
            i_btn: in STD_LOGIC);
+end component;
+
+component Moyenneur is
+    Port ( clk : in STD_LOGIC;
+           reset : in STD_LOGIC;
+           i_data : in STD_LOGIC_VECTOR (11 downto 0);
+           o_moy : out STD_LOGIC_VECTOR (11 downto 0));
+end component;
+
+component Mediane is
+    Port ( clk : in STD_LOGIC;
+           reset : in STD_LOGIC;
+           enable : in STD_LOGIC;
+           i_data : in STD_LOGIC_VECTOR (11 downto 0);
+           o_mediane : out STD_LOGIC_VECTOR (11 downto 0));
 end component;
     
     signal clk_5MHz                     : std_logic;
@@ -216,6 +232,8 @@ end component;
     signal d_adc_echantillon_0                : std_logic_vector (11 downto 0); 
     signal d_adc_echantillon_1                : std_logic_vector (11 downto 0); 
     signal d_data_maxpico            : std_logic_vector (11 downto 0); 
+    signal d_moy            : std_logic_vector (11 downto 0); 
+    signal d_mediane            : std_logic_vector (11 downto 0); 
     signal d_data_reflex            : std_logic_vector (9 downto 0); 
     signal d_data              : std_logic_vector (31 downto 0); 
     signal d_reflex_cs              : std_logic_vector (8 downto 0); 
@@ -417,7 +435,8 @@ i_sw_tri_i => i_sw,
 o_data_out_0 => d_data,
 o_leds_tri_o => open,
 i_data_maxPico_0 => d_data_maxPico,
-i_data_reflex => d_data_reflex
+i_data_reflex => d_data_reflex,
+i_data_moy_0 =>d_moy
 --o_leds_tri_o => open
 ); 
 
@@ -434,6 +453,22 @@ i_data_reflex => d_data_reflex
            o_blue => o_ledtemoin_b,
            i_btn => i_btn(1)
            );
+           
+moy: Moyenneur 
+    Port map ( clk => clk_100Hz ,
+           reset => reset_adc,
+           i_data => d_mediane ,
+           o_moy => d_moy);
+
+
+med: Mediane 
+    Port map ( clk => clk_100Hz,
+           reset => reset_adc,
+           enable => o_echantillon_pret_strobe,
+           i_data => d_echantillon_0 ,
+           o_mediane => d_mediane
+           );
+
 
 
 o_leds(1)<= i_btn(1);

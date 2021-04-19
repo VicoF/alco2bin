@@ -37,6 +37,7 @@ entity Moyenneur is
            reset : in STD_LOGIC;
            i_data : in STD_LOGIC_VECTOR (11 downto 0);
            o_moy : out STD_LOGIC_VECTOR (11 downto 0));
+           
 end Moyenneur;
 
 
@@ -60,7 +61,7 @@ port map(
 clk => clk,
 reset => reset,
 sortie => sortieRegistre,
-entree => sortieAdd
+entree => entreeRegistre
 );
 
 entreeRegistre <= '0' & sortieAdd(11 downto 1);

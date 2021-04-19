@@ -260,7 +260,6 @@ int do_http_get(int sd, char *req, int rlen) {
 		xil_printf("!!! HTTP GET: cmd/ethylo\r\n");
 
 		//obtenir les données simulées
-		float volt_flow = AD1_GetSampleVoltage1();
 		float flow = get_flow();
 		//float alcool = (float)(rand()%100) / 100;
 		float volt_alcool = AD1_GetSampleVoltage();
@@ -270,10 +269,10 @@ int do_http_get(int sd, char *req, int rlen) {
 		xil_printf("maxAlcool voltage: %.1f\n macAlcool: %.3f\n",
 				volt_max_alcool, maxAlcool);
 
-		char* ethy_buf[50];
+		char* ethy_buf[150];
 		sprintf(ethy_buf,
-				"{\n\"flow\": %.2f,\n\"alcool\": %.2f,\n\"maxAlcool\":%.2f}",
-				flow, alcool, maxAlcool);
+				"{\n\"flow\": %.2f,\n\"alcool\": %.2f,\n\"maxAlcool\":%.2f,\n\"moy\":%.2f,\n\"testState\":\"%s\"\n}",
+				flow, alcool, maxAlcool, get_moy(), get_ethylo_status());
 		unsigned int ethy_len = strlen(ethy_buf);
 		unsigned int len = generate_http_header(buf, "js", ethy_len);
 		strcat(buf, ethy_buf);
