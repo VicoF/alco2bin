@@ -304,12 +304,14 @@ begin
             end if;
             
         end process;
-        ethylo_process: process(sys_clock, d_do_ethylo_test, last_d_do_ethylo_test, o_echantillon_pret_strobe, bonne_valeur_flow )
+        ethylo_process: process(bonne_valeur_flow )
           begin
              if bonne_valeur_flow = '0' then
              read_strobe <= '0';
+             
              else
              read_strobe <= '1';
+             
             end if;
     end process;
 
@@ -319,7 +321,7 @@ port map(
            echantillon =>d_adc_echantillon_1,
            erreur_flow =>erreur_flow,
            good_flow  =>bonne_valeur_flow,
-           i_clk => sys_clock
+           i_clk => clk_100Hz
 );
 
       processor: kcpsm6
