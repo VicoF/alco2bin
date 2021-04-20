@@ -48,6 +48,15 @@ int is_cmd_start(char *buf)
 	return (!strncmp(buf, "cmd", 3) && !strncmp(buf + 4, "start_test", 10));
 }
 
+int is_cmd_change(char *buf)
+{
+	/* skip past 'POST /' */
+	buf += 6;
+
+	/* then check for cmd/change_debit */
+	return (!strncmp(buf, "cmd", 3) && !strncmp(buf + 4, "change_debit", 12));
+}
+
 void extract_file_name(char *filename, char *req, int rlen, int maxlen)
 {
 	char *fstart, *fend;
