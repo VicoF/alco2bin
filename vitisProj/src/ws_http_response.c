@@ -271,10 +271,6 @@ int do_http_get(int sd, char *req, int rlen) {
 
 		// TODO: Remplir sw_buf avec l'état des interrupteurs.
 		// Un indice : Utilisez sprintf et strcat.
-		unsigned int bit_array[4] = { 0, 0, 0, 0 };
-		hex_to_bin(switches, bit_array);
-		sprintf(sw_buf, "{\"switches\": [%u, %u, %u, %u]}", bit_array[0],
-				bit_array[1], bit_array[2], bit_array[3]);
 		// Génération de l'entête, qui a besoin de connaître la taille du buffer
 		// généré (sw_buf ici).
 		unsigned int sw_len = strlen(sw_buf);
@@ -303,7 +299,7 @@ int do_http_get(int sd, char *req, int rlen) {
 		xil_printf("maxAlcool voltage: %.1f\n macAlcool: %.3f\n",
 				volt_max_alcool, maxAlcool);
 
-		char* ethy_buf[150];
+		char* ethy_buf[200];
 		sprintf(ethy_buf,
 				"{\n\"flow\": %.2f,\n\"alcool\": %.2f,\n\"maxAlcool\":%.2f,\n\"moy\":%.2f,\n\"testState\":\"%s\"\n}",
 				flow, alcool, maxAlcool, get_moy(), get_ethylo_status());
@@ -318,7 +314,7 @@ int do_http_get(int sd, char *req, int rlen) {
 			xil_printf("http header = %s\r\n", buf);
 			return -1;
 		}
-		//�criture pmod led
+	/*	//�criture pmod led
 		PmodOLED oledDevice;
 		// Initialiser le Pmod Oled
 		OLED_Begin(&oledDevice, XPAR_PMODOLED_0_AXI_LITE_GPIO_BASEADDR,
@@ -338,11 +334,12 @@ int do_http_get(int sd, char *req, int rlen) {
 		OLED_SetCursor(&oledDevice, 13, 3);
 		OLED_PutString(&oledDevice, "g/L");
 		OLED_Update(&oledDevice);
+		xil_printf("oled_done\n");*/
 	} else if (s4i_is_cmd_reflex(req)) {
 		xil_printf("!!! HTTP GET: cmd/reflex\r\n");
 		xil_printf("result: %u\n", get_reflex_result());
 
-		char* reflex_buf[50];
+		char* reflex_buf[100];
 		sprintf(reflex_buf, "{\n\"testState\": \"%s\",\n\"result\": %u}",
 				get_reflex_status(), get_reflex_result());
 		unsigned int reflex_len = strlen(reflex_buf);

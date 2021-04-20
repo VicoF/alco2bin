@@ -210,6 +210,7 @@ proc create_root_design { parentCell } {
   set i_data_echantillon_0 [ create_bd_port -dir I -from 11 -to 0 i_data_echantillon_0 ]
   set i_data_echantillon_1 [ create_bd_port -dir I -from 11 -to 0 i_data_echantillon_1 ]
   set i_data_maxPico_0 [ create_bd_port -dir I -from 11 -to 0 i_data_maxPico_0 ]
+  set i_data_moy_0 [ create_bd_port -dir I -from 11 -to 0 i_data_moy_0 ]
   set i_data_reflex [ create_bd_port -dir I -from 9 -to 0 i_data_reflex ]
   set o_data_out_0 [ create_bd_port -dir O -from 31 -to 0 o_data_out_0 ]
 
@@ -744,6 +745,7 @@ proc create_root_design { parentCell } {
   connect_bd_net -net i_data_echantillon_0_0_1 [get_bd_ports i_data_echantillon_0] [get_bd_pins my_adcip_0/i_data_echantillon_0]
   connect_bd_net -net i_data_echantillon_1_0_1 [get_bd_ports i_data_echantillon_1] [get_bd_pins my_adcip_0/i_data_echantillon_1]
   connect_bd_net -net i_data_maxPico_0_1 [get_bd_ports i_data_maxPico_0] [get_bd_pins my_adcip_0/i_data_maxPico]
+  connect_bd_net -net i_data_moy_0_0_1 [get_bd_ports i_data_moy_0] [get_bd_pins my_adcip_0/i_data_moy_0]
   connect_bd_net -net i_data_reflex_0_1 [get_bd_ports i_data_reflex] [get_bd_pins my_adcip_0/i_data_reflex]
   connect_bd_net -net my_adcip_0_o_data_out [get_bd_ports o_data_out_0] [get_bd_pins my_adcip_0/o_data_out]
   connect_bd_net -net processing_system7_0_FCLK_CLK0 [get_bd_pins PmodGPIO_0/s_axi_aclk] [get_bd_pins PmodOLED_0/s_axi_aclk] [get_bd_pins axi_gpio_0/s_axi_aclk] [get_bd_pins axi_gpio_1/s_axi_aclk] [get_bd_pins my_adcip_0/s00_axi_aclk] [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK] [get_bd_pins ps7_0_axi_periph/ACLK] [get_bd_pins ps7_0_axi_periph/M00_ACLK] [get_bd_pins ps7_0_axi_periph/M01_ACLK] [get_bd_pins ps7_0_axi_periph/M02_ACLK] [get_bd_pins ps7_0_axi_periph/M03_ACLK] [get_bd_pins ps7_0_axi_periph/M04_ACLK] [get_bd_pins ps7_0_axi_periph/M05_ACLK] [get_bd_pins ps7_0_axi_periph/S00_ACLK] [get_bd_pins rst_ps7_0_50M/slowest_sync_clk]
@@ -762,7 +764,6 @@ proc create_root_design { parentCell } {
   # Restore current instance
   current_bd_instance $oldCurInst
 
-  validate_bd_design
   save_bd_design
 }
 # End of create_root_design()
@@ -772,9 +773,8 @@ proc create_root_design { parentCell } {
 # MAIN FLOW
 ##################################################################
 
-
-common::send_gid_msg -ssname BD::TCL -id 2052 -severity "CRITICAL WARNING" "This Tcl script was generated from a block design that is out-of-date/locked. It is possible that design <$design_name> may result in errors during construction."
-
 create_root_design ""
 
+
+common::send_gid_msg -ssname BD::TCL -id 2053 -severity "WARNING" "This Tcl script was generated from a block design that has not been validated. It is possible that design <$design_name> may result in errors during validation."
 

@@ -462,7 +462,7 @@ moy: Moyenneur
 
 
 med: Mediane 
-    Port map ( clk => clk_100Hz,
+    Port map ( clk => clk_5MHz,
            reset => reset_adc,
            enable => o_echantillon_pret_strobe,
            i_data => d_echantillon_0 ,
