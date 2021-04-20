@@ -96,7 +96,6 @@ int do_404(int sd, char *req, int rlen) {
 	return 0;
 }
 
-
 //Thread to stop ethylo test automatically after 10 seconds
 int ethylo_thread() {
 	int i = 0;
@@ -177,9 +176,9 @@ int do_http_post(int sd, char *req, int rlen) {
 		} else if (strcmp(type, "reflex") == 0) {
 			startReflexTest();
 			char response[] = "{ \"status\": \"success\"}";
-							len = generate_http_header(buf, "jsn", strlen(response));
-							strcpy(buf + len, response);
-							len += strlen(response);
+			len = generate_http_header(buf, "jsn", strlen(response));
+			strcpy(buf + len, response);
+			len += strlen(response);
 		}
 		//type not found, returning an error
 		else {
@@ -188,6 +187,41 @@ int do_http_post(int sd, char *req, int rlen) {
 					type);
 			return -1;
 		}
+
+	} else if (is_cmd_change(req)) {
+
+		/*HTTP data starts after "\r\n\r\n" sequence */
+		char *data = strstr(req, "\r\n\r\n") + 4;
+		char *min = strstr(data, "\"min\"") + 5;
+		int minValue;
+
+		/* calculate number of bytes to be printed */
+		len = rlen - (min - req);
+		/* as buffer isn't null terminated, printf %s won't work */
+		for (n = 0; n < len; n++)
+			if (isdigit(*min)) {
+				minValue = strtol(min, &min, 10);
+				break;
+			} else {
+				min++;
+			}
+		char *max = strstr(data, "\"max\"") + 5;
+		int maxValue;
+		/* calculate number of bytes to be printed */
+		len = rlen - (max - req);
+		/* as buffer isn't null terminated, printf %s won't work */
+		for (n = 0; n < len; n++)
+			if (isdigit(*max)) {
+				maxValue = strtol(max, &max, 10);
+				break;
+			} else {
+				max++;
+			}
+		xil_printf("min:%u, max:%u", minValue, maxValue);
+		char response[] = "{ \"status\": \"success\"}";
+					len = generate_http_header(buf, "jsn", strlen(response));
+					strcpy(buf + len, response);
+					len += strlen(response);
 
 	} else {
 		xil_printf("http POST: unsupported command\r\n");
@@ -304,25 +338,24 @@ int do_http_get(int sd, char *req, int rlen) {
 		OLED_SetCursor(&oledDevice, 13, 3);
 		OLED_PutString(&oledDevice, "g/L");
 		OLED_Update(&oledDevice);
-	}else if(s4i_is_cmd_reflex(req)){
+	} else if (s4i_is_cmd_reflex(req)) {
 		xil_printf("!!! HTTP GET: cmd/reflex\r\n");
-		xil_printf("result: %u\n",get_reflex_result());
+		xil_printf("result: %u\n", get_reflex_result());
 
 		char* reflex_buf[50];
-				sprintf(reflex_buf,
-						"{\n\"success\": \"%s\",\n\"result\": %u}",
-						get_reflex_status(), get_reflex_result());
-				unsigned int reflex_len = strlen(reflex_buf);
-				unsigned int len = generate_http_header(buf, "js", reflex_len);
-				strcat(buf, reflex_buf);
-				len += reflex_len;
+		sprintf(reflex_buf, "{\n\"success\": \"%s\",\n\"result\": %u}",
+				get_reflex_status(), get_reflex_result());
+		unsigned int reflex_len = strlen(reflex_buf);
+		unsigned int len = generate_http_header(buf, "js", reflex_len);
+		strcat(buf, reflex_buf);
+		len += reflex_len;
 
-				// Écriture sur le socket.
-				if (lwip_write(sd, buf, len) != len) {
-					xil_printf("Error writing GET response to socket\r\n");
-					xil_printf("http header = %s\r\n", buf);
-					return -1;
-				}
+		// Écriture sur le socket.
+		if (lwip_write(sd, buf, len) != len) {
+			xil_printf("Error writing GET response to socket\r\n");
+			xil_printf("http header = %s\r\n", buf);
+			return -1;
+		}
 	}
 
 	else {
