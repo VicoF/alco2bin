@@ -343,7 +343,7 @@ int do_http_get(int sd, char *req, int rlen) {
 		xil_printf("result: %u\n", get_reflex_result());
 
 		char* reflex_buf[50];
-		sprintf(reflex_buf, "{\n\"success\": \"%s\",\n\"result\": %u}",
+		sprintf(reflex_buf, "{\n\"testState\": \"%s\",\n\"result\": %u}",
 				get_reflex_status(), get_reflex_result());
 		unsigned int reflex_len = strlen(reflex_buf);
 		unsigned int len = generate_http_header(buf, "js", reflex_len);
